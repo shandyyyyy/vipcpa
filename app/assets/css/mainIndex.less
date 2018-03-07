@@ -1,0 +1,120 @@
+// 学区选择
+.select-area {
+    dl {
+        position: relative;
+        padding-left: 155px;
+        line-height: 58px;
+    }
+    dt {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: inline-block;
+        width: 140px;
+        font-size: 16px;
+        color: #0a275e;
+        font-weight: lighter;
+        text-align: right;
+        vertical-align: baseline;
+    }
+    dd {
+        min-height: 58px;
+        transition: height 1s;
+        -moz-transition: height 1s;	/* Firefox 4 */
+        -webkit-transition: height 1s;	/* Safari 和 Chrome */
+        -o-transition: height 1s;	/* Opera */
+
+        &.provinceShowLess {
+            height: 58px;
+            overflow: hidden;
+        }
+    }
+}
+.select-area-province {
+    font-size: 16px;
+    color: #333;
+    line-height: 31px;
+    height: 33px;
+    padding: 0 23px;
+    border-radius: 4px;
+    text-align: center;
+
+    &.ant-tag-checkable:active, 
+    &.ant-tag-checkable-checked {
+        color: #fff;
+    }
+}
+.select-area-city {
+    font-size: 16px;
+    color: #d9a460;
+    line-height: 31px;
+    height: 33px;
+    padding: 0 23px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: lighter;
+
+    &:hover {
+        border-color: #d9a460;
+    }
+
+    &.ant-tag-checkable:active, 
+    &.ant-tag-checkable-checked {
+        color: #fff;
+    }
+}
+.select-area-arrw {
+    position: absolute;
+    right: 0;
+    top: 0;
+    color:#d9a460;
+    font-size: 16px;
+    cursor: pointer;
+}
+.select-area-icon {
+    transform:rotate(90deg);
+    -ms-transform:rotate(90deg); 	/* IE 9 */
+    -moz-transform:rotate(90deg); 	/* Firefox */
+    -webkit-transform:rotate(90deg); /* Safari 和 Chrome */
+    -o-transform:rotate(90deg); 	/* Opera */
+}
+.select-area-over {
+    text-align: center;
+    padding: 25px 0;
+}
+.select-area-over-btn {
+    width: 240px;
+    height: 42px;
+    font-size: 16px;
+    color: #fff;
+}
+.course-free {
+    height: 224px;
+}
+.teacher-list {
+    margin: 0 25px;
+    height: 408px;
+
+    .slick-track {
+        width: 100000px;
+    }
+}
+.teacher-list .slick-arrow {
+    width: 60px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    z-index: 20;
+    background: #fff;
+    color: #ebd0af;
+    box-shadow: 0 0 15px rgba(44, 87, 181, .1);
+
+    &:hover,
+    &:focus {
+        background: #fff;
+        color: #d9a460!important;
+    }
+}
+.teacher-item {
+    padding: 13px;
+}

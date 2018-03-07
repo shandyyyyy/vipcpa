@@ -1,0 +1,117 @@
+.room{
+  overflow: hidden;
+  .title{
+    line-height: 50px;
+    .left{
+      text-align: left;
+      font-size: 24px;
+    }
+    .right{
+      text-align: right;
+      line-height: 18px;
+      flex: none;
+      p{
+        font-size: 12px;
+        color: #868686;
+        margin: 0;
+      }
+      .time{
+        font-size: 16px;
+        color: #484848;
+        font-weight: 600;
+      }
+      span{
+        color: #484848;
+        font-size: 16px;
+      }
+    }
+  }
+  .today_issue_play{
+    line-height: 30px;
+    color: #484848;
+    border-bottom: 1px solid #d5d5d5;
+    h4{
+      font-size: 14px;
+      color: #484848;
+      margin:0;
+      line-height: 40px;
+      font-weight: normal;
+    }
+    p{
+      font-size: 13px;
+    }
+  }
+  .topIssue{
+    font-size: 18px;
+    color:#484848;
+    font-weight: 600;
+    .my_arrow{
+      flex: none;
+      color: #979797;
+      font-size: 16px;
+      font-weight: normal;
+    }
+    .my_all{
+      color: #008489;
+    }
+  }
+  .top_list{
+    color: #484848;
+    border-bottom: 1px solid #d5d5d5;
+    .title{
+      height: 50px;
+      img{
+        max-width:100%;
+        width:42px;
+        height:42px;
+        background-color: #ccc;
+        border-radius: 50%;
+        vertical-align: middle;
+        display: inline-block;
+        float: left;
+        margin-top: 4px;
+      }
+      .title_right{
+        padding-left: 50px;
+        line-height: 25px;
+        .nickname{
+          font-size: 14px;
+        }
+        .time{
+          display: inline-block;
+          font-size: 13px;
+        }
+        i{
+          display: inline-block;
+          border-radius: 5px;
+          background-color: #f3f2f2;
+          line-height: 25px;
+          padding: 0 10px;
+          box-sizing: border-box;
+          font-style: normal;
+          margin-left: 5px;
+        }
+      }
+    }
+    .body,.answer{
+      line-height: 20px;
+      font-size:14px;
+    }
+    .answer span{
+      color: #ea3e3f;
+    }
+  }
+  .top_list:last-child{
+    border-bottom: none;
+  }
+  .am-navbar{
+    background-color: #818992;
+  }
+}
+.am-tab-bar-item{
+  overflow: hidden;
+}
+//覆盖原来的背景色
+.am-list-item.am-list-item-active{
+  background-color: transparent;
+}

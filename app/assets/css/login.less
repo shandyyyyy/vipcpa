@@ -1,0 +1,71 @@
+@redColor:#ea3e3f;
+@blueColor:#008489;
+
+.login {
+  font-size: 16px !important;
+  padding: 22px;
+  .title {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    height: 40px;
+    font-size: 30px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #484848;
+  }
+  .name, .password {
+    line-height: 60px;
+    height: 60px;
+  }
+  .am-list-item .am-input-label,
+  .am-list-item .am-input-control input{
+    font-size: 15px !important;
+  }
+  .forgot{
+    display: block;
+    height: 18px;
+    font-size: 14px;
+    letter-spacing: 1.2px;
+    text-align: right;
+    color: @redColor;
+  }
+  .login_btn{
+    background-color: @redColor;
+    border-color: @redColor !important;
+  }
+  .register_btn{
+    border:1px solid @blueColor !important;
+    color: @blueColor;
+  }
+  .login_btn::before,.register_btn::before{
+    border: none !important;
+  }
+}
+.register{
+  .login{
+    padding-top:0;
+  }
+  .navbar .am-navbar-left{
+    color: @redColor;
+  }
+  .am-input-extra{
+    color: @blueColor;
+    font-size: 14px;
+  }
+}
+.icon-lock,.icon-iphone{
+  margin-right: 5px;
+  font-size: 18px;
+}
+.icon-eye{
+  font-size: 20px;
+}
+.root .am-list-item .am-input-label.am-input-label-5{
+  max-width: 85px;
+  width: auto;
+  margin-right: 10px;
+}

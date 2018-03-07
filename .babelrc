@@ -1,0 +1,19 @@
+{
+  "presets": ["es2015", "stage-0", "react"],
+  "plugins": [
+    "espower", 
+    "transform-runtime", 
+    "transform-decorators-legacy",
+    "react-hot-loader/babel",
+    ["import", [
+        {
+          "libraryName": "antd-mobile",
+          "style": true
+        }
+      ]
+    ], 
+    ["webpack-alias", {"config": "${process.cwd()}/webpack-test.config.js"}]],
+  "env": {
+      
+  }
+}

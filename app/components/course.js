@@ -1,149 +1,117 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import {Route} from 'react-router-dom';
 import {
-	WingBlank,
-	WhiteSpace,
-	Grid,
-	Flex,
-	NavBar,
-	Icon,
-	Button,
-	Toast,
-	Modal,
-	List,
-	Tabs
+    WingBlank,
+    WhiteSpace,
+    Grid,
+    Flex,
+    NavBar,
+    Icon,
+    Button,
+    Toast,
+    Modal,
+    List,
+    Tabs,
+    ActivityIndicator
 } from 'antd-mobile';
-import '../assets/css/room.less';
+import '../assets/css/course.less';
 
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import * as actions from 'actions/modal';
-import MyModal from './modal';
-
+import CourseList from './course/courseList';
+import PpLive from './course/ppLive';
 
 const Item = List.Item;
 const Brief = Item.Brief;
 const alert = Modal.alert;
 
 const tabs = [
-	{ title: "First Tab" },
-	{ title: "Second Tab" },
-	{ title: "Third Tab" },
+    {title: "课程"},
+    {title: "直播表"}
 ];
 
-@connect(
-	(state) => {
-		return {state}
-	},
-	(dispatch) => bindActionCreators({...actions}, dispatch)
-)
+
 
 export default class Course extends React.Component {
-	constructor(props) {
-		super(props);
+    constructor(props) {
+        super(props);
 
-		this.state = {
-			message: '自习室',
-			today: new Date().getMonth() + 1 + '月' + new Date().getDate() + '日', //今天的日期
-			todayShow: true, //显示今天任务
-			currentDay: new Date().getMonth() + 1 + '月' + new Date().getDate() + '日', //当前查询日期
-			modal: false,
-			pageHeight: document.documentElement.clientHeight - 20,
-			tomato: false,
-			free: false,
-			time: 0,
-			count: 0,
-			setIntervalTime: null,
-			data: [
-				{
-					id: 1,
-					finished: false,
-					label: 'basketball basketballbasketballbasketballbasketball',
-					brief: 'details',
-					extra: false,
-					thumb: '//zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png'
-				},
-				{
-					id: 2,
-					finished: false,
-					label: 'football',
-					brief: 'details',
-					extra: true,
-					thumb: '//zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png'
-				},
-				{
-					id: 3,
-					finished: true,
-					label: 'football',
-					brief: 'details',
-					extra: true,
-					thumb: '//zos.alipayobjects.com/rmsportal/UmbJMbWOejVOpxe.png'
-				},
-			]
-		};
-	}
+        this.state = {
+            message: '课程'
+        };
+    }
 
-	componentWillMount() {
-		console.log("componentWillMount");
-	}
-	componentDidMount() {
-		console.log("componentDidMount");
-	}
-	onChange = (i) => {
-		this.state.data.forEach((item) => {
-			if (item.id === i.id) {
-				item.finished = !i.finished;
-				item.extra = !i.extra;
-			}
-		});
-		this.setState({
-			data: this.state.data
-		})
-	};
-	handleClick = (i) => {
-		this.state.data.forEach((item) => {
-			if (item.id === i.id) {
-				Toast.success("showModal", 1);
-			}
-		});
-	};
-	queryList = (key) => {
-		console.log(key);
-	};
+    componentWillMount() {
+        let {location} = this.props;
+        let tabIndex = 0;
+        let left = '5%';
+        if(location.pathname === '/index/course'){
+            tabIndex =  0;
+        }
+        if(location.pathname === '/index/course/ppLive'){
+            tabIndex =  1;
+            left = '30%';
+        }
+        this.setState({
+            tabIndex: tabIndex,
+            left: left
+        })
+    }
 
-	render() {
-		return (
-			<div className="room">
-				<WingBlank>
-					<WhiteSpace size="lg"/>
-					<Flex className="title">
-						<Flex.Item className="left">自习室</Flex.Item>
-						<Flex.Item className="right">
-							<p>在线人数</p>
-							<p className="time">157</p>
-						</Flex.Item>
-						<Flex.Item className="right">
-							<p>同班在线</p>
-							<p className="time">17</p>
-						</Flex.Item>
-					</Flex>
-					<WhiteSpace size="lg"/>
-				</WingBlank>
-				<Tabs tabs={tabs}
-					  initialPage={1}
-					  onChange={(tab, index) => { console.log('onChange', index, tab); }}
-					  onTabClick={(tab, index) => { console.log('onTabClick', index, tab); }}
-				>
-					<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '150px', backgroundColor: '#fff' }}>
-						Content of first tab
-					</div>
-					<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '150px', backgroundColor: '#fff' }}>
-						Content of second tab
-					</div>
-					<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '150px', backgroundColor: '#fff' }}>
-						Content of third tab
-					</div>
-				</Tabs>
-			</div>
-		);
-	}
+    componentDidMount() {
+        this.setState({
+            pageHeight: document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).offsetTop - 44 - 50,
+        })
+    }
+    changeTab(index){
+        const {location} = this.props;
+        let name='';
+        if(index === 0){
+            this.state.left = '5%';
+        }else{
+            this.state.left = '30%';
+            name = 'ppLive';
+        }
+        if(name === '' && `/index/course` !== location.pathname){
+            this.props.history.push({
+                pathname: `/index/course`
+            })
+            return;
+        }
+        if(`/index/course/${name}` !== location.pathname){
+            this.props.history.push({
+                pathname: `/index/course/${name}`
+            })
+        }
+        this.setState({
+            left:this.state.left
+        })
+    }
+    render() {
+        return (
+            <div className="course" >
+                <WhiteSpace size="lg"/>
+                <div className="course_tabs" ref={el => this.lv = el}>
+                    <Tabs tabs={tabs}
+                          initialPage={this.state.tabIndex}
+                          tabBarUnderlineStyle={{borderColor:'#008489',left:this.state.left}}
+                          tabBarActiveTextColor="#008489"
+                          onChange={(tab, index) => {
+                              this.changeTab(index);
+                          }}
+                          onTabClick={(tab, index) => {
+                              this.changeTab(index);
+                          }}
+                    >
+                        <div style={{height: this.state.pageHeight, backgroundColor: '#fff', overflow:'auto'}} >
+                            <Route path='/index/course' component={CourseList}/>
+                        </div>
+                        <div style={{height: this.state.pageHeight, backgroundColor: '#fff', overflow:'auto'}}>
+                            <Route path='/index/course/ppLive' component={PpLive}/>
+                        </div>
+                    </Tabs>
+                </div>
+                <WhiteSpace size="lg"/>
+            </div>
+        );
+    }
 }

@@ -1,22 +1,71 @@
-var GLive = GLive || {
+// var gaodun_callback = {
+//     id: 1,
+//     m: {},
+//     callback: function (id, s) {
+//         var gd_cb = gaodun_callback;
+//         if (!gd_cb.m[gd_cb.id]) {
+//             return;
+//         }
+//         var f = gd_cb.m[gd_cb.id];
+//         if (typeof f !== "function") {
+//             return;
+//         }
+//
+//         var obj = JSON.parse(s);
+//         f(obj);
+//     },
+//     invoke: function (type, url, cb) {
+//         var gd_cb = gaodun_callback;
+//
+//         gd_cb.m[gd_cb.id] = cb;
+//
+//         window.gaodun_app.postMessage(type, id, url);
+//
+//         gd_cb.id++;
+//     }
+// };
+// window.gaodun_callback = gaodun_callback;
+// gaodun_callback.callback(type, id, responseBody);
+
+var gaodun_callback = gaodun_callback || {
     Config: {
         domain: "live-pre.gaodun.com",
         // domain: "live-hz.gaodun.com",
         // domain: "live-t.gaodun.com",
-        app: false
-    }
+        app: false,
+        id: new Date().getTime(),
+        type: 1,
+        m: {},
+    },
+    callback: function (obj) {
+        // window.alert(JSON.stringify(obj));
+        // window.alert(obj.type, obj.id, obj.response);
+
+        var gd_cb = gaodun_callback.Config;
+        if (!gd_cb.m[obj.id]) {
+            window.alert(obj.id);
+            return;
+        }
+        var f = gd_cb.m[obj.id];
+        if (typeof f !== "function") {
+            window.alert(obj.id + '222');
+            return;
+        }
+
+        f(obj.response);
+    },
 };
 
 // Common Methods.
 (function () {
-    if ((GLive.Methods !== undefined) && (GLive.Methods !== null)) {
+    if ((gaodun_callback.Methods !== undefined) && (gaodun_callback.Methods !== null)) {
         return;
     }
 
-    GLive.Methods = {
+    gaodun_callback.Methods = {
         tips: function (info) {
             var div = document.createElement('div');
-            div.className='classTip';
+            div.className = 'classTip';
             var span = document.createElement('span');
             span.innerText = info;
             div.appendChild(span);
@@ -142,20 +191,6 @@ var GLive = GLive || {
             var arr = [pageTemplate, timeStrict, askTemplate];
             return arr;
         },
-        getPlatformName: function (id) {
-            switch (id) {
-                case 0:
-                    return "GLive";
-                case 1:
-                    return "Gensee";
-                case 2:
-                    return "BokeCC";
-                case 3:
-                    return "Mock";
-                default:
-                    return this.g.EN ? "Unknown" : "鏈煡";
-            }
-        },
         getMeetingTypeName: function (id) {
             switch (id) {
                 case 0:
@@ -170,7 +205,7 @@ var GLive = GLive || {
         },
 
         answerArray2HexString: function (arr) {
-            if (!GLive.Methods.isValid(arr) || arr.length === 0) {
+            if (!gaodun_callback.Methods.isValid(arr) || arr.length === 0) {
                 return "";
             }
 
@@ -179,7 +214,7 @@ var GLive = GLive || {
                 var answer = arr[i];
 
                 // Check the answer itself.
-                if (!GLive.Methods.isValid(answer) || answer.length === 0) {
+                if (!gaodun_callback.Methods.isValid(answer) || answer.length === 0) {
                     result += "00";
                     continue;
                 }
@@ -420,25 +455,23 @@ var GLive = GLive || {
     };
 })();
 
-// (function () {
-//     GLive.Methods.tips(navigator.userAgent);
-//     if (navigator.userAgent.indexOf('vipcpa') > -1) {
-//         GLive.Config.app = true;
-//     }
-//     // GLive.Methods.tips(GLive.Config.app);
-// })();
-
+(function () {
+    if (window.gaodun_app && (typeof window.gaodun_app === "object") || (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.gaodun_app)) {
+        gaodun_callback.Config.app = true;
+    }
+    // gaodun_callback.Methods.tips(gaodun_callback.Config.app)
+})();
 // Data.
 (function () {
-    if (GLive.Methods.isValid(GLive.Data)) {
+    if (gaodun_callback.Methods.isValid(gaodun_callback.Data)) {
         return;
     }
 
-    var storageKey = "GLiveData";
+    var storageKey = "gaodun_callbackData";
 
     // Data-related methods.
-    GLive.Methods.initData = function (english) {
-        GLive.Data = {
+    gaodun_callback.Methods.initData = function (english) {
+        gaodun_callback.Data = {
             COMPONENT: {
                 UNKNOWN: 0,
                 GROUP: 1,
@@ -450,8 +483,8 @@ var GLive = GLive || {
                 VIDEO: 7
             },
 
-            // STORAGE: GLive.Methods.isValid(localStorage) ? true : false,
-            EN: GLive.Methods.isValid(english) ? english : (navigator.language.indexOf("zh") === 0 ? false : true),
+            // STORAGE: gaodun_callback.Methods.isValid(localStorage) ? true : false,
+            EN: gaodun_callback.Methods.isValid(english) ? english : (navigator.language.indexOf("zh") === 0 ? false : true),
 
             me: {
                 id: 0,
@@ -482,13 +515,13 @@ var GLive = GLive || {
             currentComponent: 0,
         };
     };
-    GLive.Methods.saveData = function () {
-        // if (GLive.Data.STORAGE !== true) {
+    gaodun_callback.Methods.saveData = function () {
+        // if (gaodun_callback.Data.STORAGE !== true) {
         // return;
         // }
-        localStorage.setItem(storageKey, JSON.stringify(GLive.Data));
+        localStorage.setItem(storageKey, JSON.stringify(gaodun_callback.Data));
     };
-    GLive.Methods.loadData = function () {
+    gaodun_callback.Methods.loadData = function () {
         // if (!localStorage) {
         // return false;
         // }
@@ -498,60 +531,35 @@ var GLive = GLive || {
             return false;
         }
 
-        GLive.Data = eval("(" + s + ")");
+        gaodun_callback.Data = eval("(" + s + ")");
         return true;
     };
-    GLive.Methods.removeData = function () {
-        var english = GLive.Data.EN;
-        GLive.Methods.initData(english);
+    gaodun_callback.Methods.removeData = function () {
+        var english = gaodun_callback.Data.EN;
+        gaodun_callback.Methods.initData(english);
         localStorage.removeItem(storageKey);
 
-        if (GLive.Data.STORAGE === true) {
-            GLive.Methods.saveData();
+        if (gaodun_callback.Data.STORAGE === true) {
+            gaodun_callback.Methods.saveData();
         }
     };
-    if (GLive.Config.app === false) {
-        GLive.Methods.onXMLHttpError = function (n) {
+    if (gaodun_callback.Config.app === false) {
+        gaodun_callback.Methods.onXMLHttpError = function (n) {
             localStorage.clear();
             window.location.href = "#/login";
         };
     }
+
     // Try to load it from local storage.
-    if (!GLive.Methods.loadData()) {
+    if (!gaodun_callback.Methods.loadData()) {
         // Clear everything.
-        GLive.Methods.initData();
+        gaodun_callback.Methods.initData();
     }
 })();
-//APP request
-// (function () {
-//     var NativeHelper = {
-//         id: 1,
-//         m: {},
-//         callback: function(id, s) {
-//             if (!m[id]) {
-//                 return;
-//             }
-//             var f = m[id];
-//             if (typeof f !== "function") {
-//                 return;
-//             }
-//
-//             var obj = JSON.parse(s);
-//             f(obj);
-//         },
-//         invoke: function(url, cb) {
-//             m[id] = cb;
-//             nativeInvoke(id, url);
-//             id ++;
-//         }
-//     };
-// window.NativeHelper = NativeHelper;
-// })();
-//end
 
 // Request sender.
 (function () {
-    if (GLive.Methods.isValid(GLive.Sender)) {
+    if (gaodun_callback.Methods.isValid(gaodun_callback.Sender)) {
         return;
     }
     //web request
@@ -566,56 +574,49 @@ var GLive = GLive || {
                 isWorking: false
             };
 
-            instance.newInvocation = function (url, withSession, onSuccess) {
-                GLive.Methods.tips('444444');
-                instance.q.push({
-                    json: true,
-                    method: "POST",
-                    url: instance.apiPrefix + url,
-                    withSession: withSession,
-                    data: null,
-                    onSuccess: onSuccess,
-                    onError: GLive.Methods.onXMLHttpError,
-                    onOpened: null,
-                    onProgress: null
-                });
+            instance.newInvocation = function (url, cb) {
+                var gd_cb = gaodun_callback.Config;
 
-                startToWork();
-            };
-
-            instance.newUploading = function (url, file, onSuccess, onError, onOpened, onProgress) {
-                var fileForm = new FormData();
-                fileForm.append("file", file);
-
-                instance.q.push({
-                    json: false,
-                    method: "POST",
-                    url: instance.apiPrefix + url,
-                    withSession: true,
-                    data: fileForm,
-                    onSuccess: onSuccess,
-                    onError: onError,
-                    onOpened: onOpened,
-                    onProgress: onProgress
-                });
-
-                startToWork();
-            };
-
-            instance.newDownloading = function (url, onSuccess, onError) {
-                instance.q.push({
-                    json: false,
-                    method: "GET",
-                    url: url,
-                    withSession: false,
-                    data: null,
-                    onSuccess: onSuccess,
-                    onError: onError,
-                    onOpened: null,
-                    onProgress: null
-                });
-
-                startToWork();
+                gd_cb.m[gd_cb.id] = cb;
+                // if (!window.webkit) {
+                //     window.alert("!window.webkit");
+                // } else if (!window.webkit.messageHandlers) {
+                //     window.alert("!window.webkit.messageHandlers");
+                // } else if (!window.webkit.messageHandlers.gaodun_app) {
+                //     window.alert("!window.webkit.messageHandlers.gaodun_app");
+                // }
+                if (window.gaodun_app) {
+                    // window.alert("BEFORE Android");
+                    window.gaodun_app.postMessage(gd_cb.type, gd_cb.id, url);
+                    // window.alert("AFTER Android");
+                } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.gaodun_app) {
+                    // window.alert("BEFORE iOS");
+                    window.webkit.messageHandlers.gaodun_app.postMessage({
+                        "type": gd_cb.type,
+                        "id": gd_cb.id,
+                        "url": url
+                    });
+                    // window.alert("AFTER iOS");
+                } else {
+                    console.log("!gaodun_app");
+                    if (gd_cb.type !== 1) {
+                        return cb(gaodun_callback.Data.currentClass);
+                    }
+                    instance.q.push({
+                        json: true,
+                        method: "POST",
+                        url: instance.apiPrefix + url,
+                        withSession: true,
+                        data: null,
+                        onSuccess: cb,
+                        onError: gaodun_callback.Methods.onXMLHttpError,
+                        onOpened: null,
+                        onProgress: null
+                    });
+                    // console.log(instance.q);
+                    startToWork();
+                }
+                gd_cb.id++;
             };
 
             instance.setTime = function (time) {
@@ -669,7 +670,7 @@ var GLive = GLive || {
                 // 	}
                 // }
             };
-
+            console.log(instance.q);
             var startToWork = function () {
                 if (instance.q.length === 0) {
                     return;
@@ -688,7 +689,6 @@ var GLive = GLive || {
 
                 // Remove this request from the queue.
                 instance.q.splice(0, 1);
-
                 // Send it.
                 request(
                     r.method,
@@ -790,8 +790,8 @@ var GLive = GLive || {
 
                                 var sLastDate = xmlHttp.getResponseHeader("date");
                                 if ((sLastDate !== undefined) && (sLastDate !== null) && (sLastDate !== "")) {
-                                    // GLive.Data.lastDate = new Date(sLastDate);
-                                    GLive.Data.timestamp = (new Date(sLastDate)).getTime();
+                                    // gaodun_callback.Data.lastDate = new Date(sLastDate);
+                                    gaodun_callback.Data.timestamp = (new Date(sLastDate)).getTime();
                                 }
                             }
 
@@ -809,72 +809,38 @@ var GLive = GLive || {
                 // Send the request.
                 xmlHttp.send(data);
             };
-
             return instance;
         }
     };
 
-    GLive.Sender = RequestSender.createNew((!GLive.Methods.isValid(GLive.Config.domain) || GLive.Config.domain === "") ? "" : (window.location.protocol + "//" + GLive.Config.domain));
+    gaodun_callback.Sender = RequestSender.createNew((!gaodun_callback.Methods.isValid(gaodun_callback.Config.domain) || gaodun_callback.Config.domain === "") ? "" : (window.location.protocol + "//" + gaodun_callback.Config.domain));
 })();
 
 // User-related methods.
 (function () {
-    if (GLive.Methods.isValid(GLive.User)) {
+    if (gaodun_callback.Methods.isValid(gaodun_callback.User)) {
         return;
     }
 
-    GLive.User = {
+    gaodun_callback.User = {
         register: function (userName, userPassword, token, onCallback) {
-            GLive.Sender.newInvocation(
-                "/user/register?name=" + encodeURIComponent(userName) + "&password=" + GLive.Methods.md5(userPassword) + "&token=" + encodeURIComponent(token),
-                true,
+            gaodun_callback.Sender.newInvocation(
+                "/user/register?name=" + encodeURIComponent(userName) + "&password=" + gaodun_callback.Methods.md5(userPassword) + "&token=" + encodeURIComponent(token),
                 onCallback
             );
         },
         login: function (userName, userPassword, onCallback) {
-            GLive.Sender.newInvocation(
-                "/user/login?name=" + encodeURIComponent(userName) + "&password=" + GLive.Methods.md5(userPassword),
-                true,
+            gaodun_callback.Sender.newInvocation(
+                "/user/login?name=" + encodeURIComponent(userName) + "&password=" + gaodun_callback.Methods.md5(userPassword),
                 function (resp) {
                     if (resp.status === 0) {
-                        GLive.Data.me = resp.result;
+                        gaodun_callback.Data.me = resp.result;
 
-                        GLive.Sender.setID(GLive.Data.me.id);
-                        GLive.Methods.saveData();
+                        gaodun_callback.Sender.setID(gaodun_callback.Data.me.id);
+                        gaodun_callback.Methods.saveData();
                         onCallback(resp);
-                        // Update groups.
-                        // if (resp.result.role === "SYSTEM") {
-                        // 	GLive.Group.query(function(resp) {
-                        // 		if (resp.status !== 0 || GLive.Data.groups.length === 0) {
-                        // 			if (GLive.Methods.isValid(onCallback)) {
-                        // 				onCallback(resp);
-                        // 			}
-                        // 			return;
-                        // 		}
-
-                        // 		GLive.Data.currentGroupName = GLive.Data.groups[0].name;
-                        // 		GLive.Data.currentGroup = GLive.Data.groups[0].id;
-                        // 		GLive.Class.query(
-                        // 			function(resp) {
-                        // 				if (GLive.Methods.isValid(onCallback)) {
-                        // 					onCallback(resp);
-                        // 				}
-                        // 			},
-                        // 			GLive.Data.currentGroup
-                        // 		);
-                        // 	});
-                        // } else {
-                        // 	GLive.Class.query(
-                        // 		function(resp) {
-                        // 			if (GLive.Methods.isValid(onCallback)) {
-                        // 				onCallback(resp);
-                        // 			}
-                        // 		},
-                        // 		GLive.Data.currentGroup
-                        // 	);
-                        // }
                     } else {
-                        if (GLive.Methods.isValid(onCallback)) {
+                        if (gaodun_callback.Methods.isValid(onCallback)) {
                             onCallback(resp);
                         }
                     }
@@ -882,19 +848,18 @@ var GLive = GLive || {
             );
         },
         loginAsGaodunUser: function (userName, userPassword, onCallback, onError) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/gaodun/login?name=" + encodeURIComponent(userName) + "&password=" + encodeURIComponent(userPassword),
-                true,
                 function (resp) {
                     if (resp.status === 0) {
                         // Update groups.
-                        GLive.Data.me.role = "STUDENT";
-                        GLive.Data.me = resp.result;
-                        GLive.Sender.setID(resp.result.id);
+                        gaodun_callback.Data.me.role = "STUDENT";
+                        gaodun_callback.Data.me = resp.result;
+                        gaodun_callback.Sender.setID(resp.result.id);
                         onCallback(resp);
-                        // GLive.queryClass(
+                        // gaodun_callback.queryClass(
                         // 	function (resp) {
-                        // 		if (GLive.isFunction(onCallback)) {
+                        // 		if (gaodun_callback.isFunction(onCallback)) {
                         // 			onCallback(resp);
                         // 		}
                         // 	}
@@ -905,25 +870,24 @@ var GLive = GLive || {
             );
         },
         loginAsGaodunStudent: function (password, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/gaodun/pass?password=" + password,
-                true,
                 function (resp) {
                     if (resp.status === 0) {
-                        GLive.Data.me.id = resp.result.id;
-                        GLive.Data.me.nickname = resp.result.nickname;
-                        GLive.Data.me.role = "STUDENT";
-                        GLive.Data.currentClass = resp.result.class;
+                        gaodun_callback.Data.me.id = resp.result.id;
+                        gaodun_callback.Data.me.nickname = resp.result.nickname;
+                        gaodun_callback.Data.me.role = "STUDENT";
+                        gaodun_callback.Data.currentClass = resp.result.class;
 
-                        GLive.Sender.setID(GLive.Data.me.id);
+                        gaodun_callback.Sender.setID(gaodun_callback.Data.me.id);
 
-                        GLive.Sender.newInvocation(
+                        gaodun_callback.Sender.newInvocation(
                             "/class/meeting/query?class=" + resp.result.class,
                             true,
                             onCallback
                         );
                     } else {
-                        if (GLive.Methods.isValid(onCallback)) {
+                        if (gaodun_callback.Methods.isValid(onCallback)) {
                             onCallback(resp);
                         }
                     }
@@ -931,12 +895,12 @@ var GLive = GLive || {
             );
         },
         logout: function (onCallback) {
-            GLive.Methods.removeData();
+            gaodun_callback.Methods.removeData();
 
-            GLive.Sender.setID("");
-            GLive.Sender.setToken("");
+            gaodun_callback.Sender.setID("");
+            gaodun_callback.Sender.setToken("");
 
-            if (GLive.Methods.isValid(onCallback)) {
+            if (gaodun_callback.Methods.isValid(onCallback)) {
                 onCallback(resp);
             }
             ;
@@ -944,22 +908,20 @@ var GLive = GLive || {
             window.location.reload();
         },
         changePassword: function (oldPassword, newPassword, onCallback) {
-            GLive.Sender.newInvocation(
-                "/user/password/change?oldPassword=" + GLive.Methods.md5(oldPassword) + "&password=" + GLive.Methods.md5(newPassword),
-                true,
+            gaodun_callback.Sender.newInvocation(
+                "/user/password/change?oldPassword=" + gaodun_callback.Methods.md5(oldPassword) + "&password=" + gaodun_callback.Methods.md5(newPassword),
                 onCallback
             );
         },
         changeProfile: function (nickname, mail, phone, qq, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/user/profile/change?nickname=" + encodeURIComponent(nickname) + "&mail=" + encodeURIComponent(mail) + "&phone=" + encodeURIComponent(phone) + "&qq=" + encodeURIComponent(qq),
-                true,
                 function (resp) {
                     if (resp.status === 0) {
-                        GLive.Data.me.nickname = nickname;
-                        GLive.Methods.saveData();
+                        gaodun_callback.Data.me.nickname = nickname;
+                        gaodun_callback.Methods.saveData();
                     }
-                    if (GLive.Methods.isValid(onCallback)) {
+                    if (gaodun_callback.Methods.isValid(onCallback)) {
                         onCallback(resp);
                     }
                 }
@@ -972,16 +934,14 @@ var GLive = GLive || {
             } else {
                 params = "&teacher=";
             }
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/class/student/remark?remark=" + encodeURIComponent(remark) + params + userID + "&class=" + classID + "&name=" + name,
-                true,
                 onCallback
             );
         },
         queryGaodunStudentInfo: function (gaodunStudentID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/gaodun/student/info/query?id=" + gaodunStudentID,
-                true,
                 onCallback
             );
         },
@@ -991,22 +951,21 @@ var GLive = GLive || {
 
 // Group-related methods.
 (function () {
-    if (GLive.Methods.isValid(GLive.Group)) {
+    if (gaodun_callback.Methods.isValid(gaodun_callback.Group)) {
         return;
     }
 
-    GLive.Group = {
+    gaodun_callback.Group = {
         query: function (onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/user/group/query",
-                true,
                 function (resp) {
                     if (resp.status === 0) {
-                        GLive.Data.groups = resp.result.group;
-                        // GLive.Data.currentComponent = GLive.Data.COMPONENT.CLASS;
-                        // GLive.Methods.saveData();
+                        gaodun_callback.Data.groups = resp.result.group;
+                        // gaodun_callback.Data.currentComponent = gaodun_callback.Data.COMPONENT.CLASS;
+                        // gaodun_callback.Methods.saveData();
                     }
-                    if (GLive.Methods.isValid(onCallback)) {
+                    if (gaodun_callback.Methods.isValid(onCallback)) {
                         onCallback(resp);
                     }
                     ;
@@ -1015,9 +974,8 @@ var GLive = GLive || {
         },
         // 查询科目
         querySubject: function (onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/subject/query",
-                true,
                 onCallback
             );
         },
@@ -1027,50 +985,61 @@ var GLive = GLive || {
                 s += "?group=" + groupID;
             }
 
-            GLive.Sender.newInvocation(s, true, onCallback);
+            gaodun_callback.Sender.newInvocation(s, onCallback);
         },
         // 标签
         // 查询
         queryTag: function (groupID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/tag/query?group=" + groupID,
-                true,
                 onCallback
             );
-        }
+        },
+        //查询预约
+        getBooking: function (groupID, subject, onCallback) {
+            gaodun_callback.Sender.newInvocation(
+                "/booking/get?subject=" + subject + "&group=" + groupID,
+                onCallback
+            );
+        },
+        //增加预约
+        setBooking: function (groupID, subject, date, startTime, phone, question, onCallback) {
+            gaodun_callback.Sender.newInvocation(
+                "/booking/set?subject=" + subject + "&group=" + groupID + "&date=" + date + "&startTime=" + startTime + "&phone=" + encodeURIComponent(phone) + "&question=" + encodeURIComponent(question),
+                onCallback
+            );
+        },
     };
 })();
 
 // Class-related methods.
 (function () {
-    if (GLive.Methods.isValid(GLive.Class)) {
+    if (gaodun_callback.Methods.isValid(gaodun_callback.Class)) {
         return;
     }
 
-    GLive.Class = {
+    gaodun_callback.Class = {
         getOneClass: function (classID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/class/get?class=" + classID,
-                true,
                 onCallback
             );
         },
         query: function (onCallback, groupID) {
             var params = "";
-            if (GLive.Data.me.role === "SYSTEM") {
+            if (gaodun_callback.Data.me.role === "SYSTEM") {
                 params += "?group=" + groupID;
             }
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/class/query" + params,
-                true,
                 function (resp) {
                     if (resp.status === 0) {
-                        GLive.Data.classes = resp.result.classList;
-                        GLive.Data.currentGroup = groupID;
-                        GLive.Data.currentComponent = GLive.Data.COMPONENT.CLASS;
-                        GLive.Methods.saveData();
+                        gaodun_callback.Data.classes = resp.result.classList;
+                        gaodun_callback.Data.currentGroup = groupID;
+                        gaodun_callback.Data.currentComponent = gaodun_callback.Data.COMPONENT.CLASS;
+                        gaodun_callback.Methods.saveData();
                     }
-                    if (GLive.Methods.isValid(onCallback)) {
+                    if (gaodun_callback.Methods.isValid(onCallback)) {
                         onCallback(resp);
                     }
                     ;
@@ -1079,17 +1048,33 @@ var GLive = GLive || {
         },
         //获取班级笔记
         getNote: function (classID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/note/get?class=" + classID,
-                true,
+                onCallback
+            );
+        },
+        //记笔记
+        sendNote: function (classID, meetingID, type, key, subkey, body, onCallback) {
+            gaodun_callback.Sender.newInvocation(
+                "/note/add?class=" + classID + "&meeting=" + meetingID + "&type=" + type +
+                "&key=" + key + "&subKey=" + subkey + "&body=" + encodeURIComponent(body),
+                onCallback
+            );
+        },
+
+        //提问题
+        askQuestion: function (classID, meetingID, type, key, subkey, question, onCallback) {
+            question = encodeURIComponent(question);
+            gaodun_callback.Sender.newInvocation(
+                "/class/issue/ask?class=" + classID + "&meeting=" + meetingID + "&type=" + type + "&key=" + key + "&subKey=" +
+                subkey + "&question=" + question,
                 onCallback
             );
         },
         // 获取班级所有问题
         issueGet: function (classID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/class/issue/get?class=" + classID,
-                true,
                 onCallback
             );
         },
@@ -1097,80 +1082,68 @@ var GLive = GLive || {
         // 回答问题
         answerIssue: function (classID, issueID, answer, onCallback) {
             answer = encodeURIComponent(LZString.compressToBase64(answer));
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/class/issue/answer?class=" + classID + "&issue=" + issueID + "&answer=" + answer,
-                true,
                 onCallback
             );
         },
-        getBooking: function (subject, groupID, onCallback) {
-            GLive.Sender.newInvocation(
-                "/booking/get?subject=" + subject + "&group=" + groupID,
-                true,
-                onCallback
-            );
-        },
+
     };
 })();
 
 // Meeting-related methods.
 (function () {
-    if (GLive.Methods.isValid(GLive.Meeting)) {
+    if (gaodun_callback.Methods.isValid(gaodun_callback.Meeting)) {
         return;
     }
 
-    GLive.Meeting = {
+    gaodun_callback.Meeting = {
         getOneMeeting: function (meetingID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/meeting/get?meeting=" + meetingID,
-                true,
                 onCallback
             );
         },
         queryByClass: function (classID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/class/meeting/query?class=" + classID,
-                true,
                 onCallback
                 // function(resp) {
                 // 	if (resp.status === 0) {
-                // 		// GLive.Data.currentClass = classID;
-                // 		// GLive.Data.meetings = resp.result.meeting;
-                // 		// GLive.Data.currentComponent = GLive.Data.COMPONENT.MEETING;
+                // 		// gaodun_callback.Data.currentClass = classID;
+                // 		// gaodun_callback.Data.meetings = resp.result.meeting;
+                // 		// gaodun_callback.Data.currentComponent = gaodun_callback.Data.COMPONENT.MEETING;
 
-                // 		// GLive.Methods.saveData();
+                // 		// gaodun_callback.Methods.saveData();
                 // 	}
 
-                // 	if (GLive.Methods.isValid(onCallback)) {
+                // 	if (gaodun_callback.Methods.isValid(onCallback)) {
                 // 		onCallback(resp);
                 // 	}
                 // }
             );
         },
         authorizeVideos: function (meetingID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/meeting/video/authorize?meeting=" + meetingID,
-                true,
                 onCallback
             );
         },
         authorizeReplays: function (meetingID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/meeting/replay/authorize?meeting=" + meetingID,
-                true,
                 onCallback
             );
         },
         resyncExam: function (meetingID, examID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/meeting/exam/resync?meeting=" + meetingID + "&exam=" + examID,
-                true,
                 onCallback
                 // function(resp) {
                 // 	if (resp.status === 0) {
-                // 		GLive.Meeting.queryByClass(GLive.Data.currentClass, onCallback);
+                // 		gaodun_callback.Meeting.queryByClass(gaodun_callback.Data.currentClass, onCallback);
                 // 	} else {
-                // 		if (GLive.Methods.isValid(onCallback)) {
+                // 		if (gaodun_callback.Methods.isValid(onCallback)) {
                 // 			onCallback(resp);
                 // 		}
                 // 	}
@@ -1179,39 +1152,34 @@ var GLive = GLive || {
         },
         // 获取每节课某一试卷  所有学员的答案
         queryExamAnswer: function (meetingID, examID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/meeting/exam/answer/get?meeting=" + meetingID + "&exam=" + examID,
-                true,
                 onCallback
             );
         },
 
         askForLeave: function (meetingID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/meeting/leave?meeting=" + meetingID + "&cancel=0",
-                true,
                 onCallback
             );
         },
         cancelLeave: function (meetingID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/meeting/leave?meeting=" + meetingID + "&cancel=1",
-                true,
                 onCallback
             );
         },
         join: function (meetingID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/meeting/join?meeting=" + meetingID,
-                true,
                 onCallback
             );
         },
         // get feedback
         getFeedback: function (meetingID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/meeting/feedback/get?meeting=" + meetingID,
-                true,
                 onCallback
             );
         }
@@ -1220,28 +1188,27 @@ var GLive = GLive || {
 
 // Student-related methods.
 (function () {
-    if (GLive.Methods.isValid(GLive.Student)) {
+    if (gaodun_callback.Methods.isValid(gaodun_callback.Student)) {
         return;
     }
 
-    GLive.Student = {
+    gaodun_callback.Student = {
         queryByClass: function (classID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/class/student/query?class=" + classID,
-                true,
                 function (resp) {
                     if (resp.status === 0) {
-                        GLive.Data.students = [];
+                        gaodun_callback.Data.students = [];
                         for (var userID in resp.result.user) {
-                            GLive.Data.students.push({
+                            gaodun_callback.Data.students.push({
                                 id: userID,
                                 nickname: resp.result.user[userID].nickname,
-                                gaodunStudentID: GLive.Methods.isValid(resp.result.user[userID].gaodunStudentID) ? resp.result.user[userID].gaodunStudentID : 0,
+                                gaodunStudentID: gaodun_callback.Methods.isValid(resp.result.user[userID].gaodunStudentID) ? resp.result.user[userID].gaodunStudentID : 0,
                                 remark: resp.result.user[userID].remark
                             });
                         }
                     }
-                    if (GLive.Methods.isValid(onCallback)) {
+                    if (gaodun_callback.Methods.isValid(onCallback)) {
                         onCallback(resp);
                     }
                 }
@@ -1252,82 +1219,73 @@ var GLive = GLive || {
 
 // Progress-related methods.
 (function () {
-    if (GLive.Methods.isValid(GLive.Progress)) {
+    if (gaodun_callback.Methods.isValid(gaodun_callback.Progress)) {
         return;
     }
 
-    GLive.Progress = {
+    gaodun_callback.Progress = {
         queryByClassAndUser: function (classID, userID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/class/progress/query?class=" + classID + "&user=" + userID,
-                true,
                 onCallback
             );
         },
         queryByMeeting: function (meetingID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/meeting/progress/query?meeting=" + meetingID,
-                true,
                 onCallback
             );
         },
         queryMineByClass: function (classID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/class/progress/query?class=" + classID,
-                true,
                 onCallback
             );
         },
         queryMineByMeeting: function (meetingID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/meeting/progress/query?meeting=" + meetingID,
-                true,
                 onCallback
             );
         },
         finishCourseware: function (meetingID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/meeting/courseware/finish?meeting=" + meetingID,
-                true,
                 onCallback
             );
         },
         finishVideo: function (meetingID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/meeting/video/finish?meeting=" + meetingID,
-                true,
                 onCallback
             );
         },
         finishMeeting: function (meetingID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/meeting/finish?meeting=" + meetingID,
-                true,
                 onCallback
             );
         },
         authorizeExam: function (meetingID, examID, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/meeting/exam/authorize?meeting=" + meetingID + "&exam=" + examID,
-                true,
                 onCallback
             );
         },
         answerExam: function (meetingID, examID, answer, onCallback) {
-            GLive.Sender.newInvocation(
+            gaodun_callback.Sender.newInvocation(
                 "/meeting/exam/answer?meeting=" + meetingID + "&exam=" + examID + "&answer=" + answer,
-                true,
                 onCallback
             );
         },
         summarizeProgressOfClass: function (classID, onCallback) {
             // Get all meetings within this class.
-            GLive.Meeting.queryByClass(
+            gaodun_callback.Meeting.queryByClass(
                 classID,
                 function (resp) {
                     // Check status code.
                     if (resp.status !== 0) {
-                        if (GLive.Methods.isValid(onCallback)) {
+                        if (gaodun_callback.Methods.isValid(onCallback)) {
                             onCallback(resp);
                         }
                         return;
@@ -1346,7 +1304,7 @@ var GLive = GLive || {
                         var m = resp.result.meeting[i];
 
                         // Ignore invalid meetings.
-                        if (!GLive.Methods.isValid(m)) {
+                        if (!gaodun_callback.Methods.isValid(m)) {
                             continue;
                         }
 
@@ -1367,7 +1325,7 @@ var GLive = GLive || {
                         let m = meetings[i];
 
                         // Ignore invalid meetings.
-                        if (!GLive.Methods.isValid(m)) {
+                        if (!gaodun_callback.Methods.isValid(m)) {
                             continue;
                         }
                         // Ignore meetings whose start time is after now.
@@ -1376,13 +1334,13 @@ var GLive = GLive || {
                         }
 
                         // Get students' progresses of this meeting.
-                        GLive.Progress.queryByMeeting(
+                        gaodun_callback.Progress.queryByMeeting(
                             m.id,
                             function (resp) {
                                 // Check status code.
                                 if (resp.status !== 0) {
                                     // TODO:
-                                    // if (GLive.Methods.isValid(onCallback)) {
+                                    // if (gaodun_callback.Methods.isValid(onCallback)) {
                                     // 	onCallback(resp);
                                     // }
                                     return;
@@ -1393,7 +1351,7 @@ var GLive = GLive || {
                                     var p = resp.result.progress[j];
 
                                     // Get user ID of this student.
-                                    if (!GLive.Methods.isValid(result[p.userID])) {
+                                    if (!gaodun_callback.Methods.isValid(result[p.userID])) {
                                         // Initiate an array for this student.
                                         result[p.userID] = [];
                                     }
@@ -1403,10 +1361,10 @@ var GLive = GLive || {
                                 }
 
                                 if (index === meetings.length - 1) { // This is the last meeting.
-                                    GLive.Data.progresses[classID] = result;
-                                    GLive.Methods.saveData();
+                                    gaodun_callback.Data.progresses[classID] = result;
+                                    gaodun_callback.Methods.saveData();
 
-                                    if (GLive.Methods.isValid(onCallback)) {
+                                    if (gaodun_callback.Methods.isValid(onCallback)) {
                                         onCallback({
                                             status: 0,
                                             info: "Okay.",
@@ -1422,4 +1380,31 @@ var GLive = GLive || {
         },
     };
 })();
-window.GLive = GLive;
+
+// getDate from APP || web
+(function () {
+
+    gaodun_callback.GetData = {
+
+        getClass: function (typeID, onCallback) {
+            gaodun_callback.Config.type = typeID;
+            gaodun_callback.Sender.newInvocation(
+                "/?type=" + typeID,
+                onCallback
+            );
+        }
+    };
+})();
+// 播放视频
+(function () {
+    gaodun_callback.DoVideoCmd = {
+        playVideo: function (videoID, videoName, onCallback) {
+            gaodun_callback.Config.type = 3;
+            gaodun_callback.Sender.newInvocation(
+                "/?videoID=" + videoID + "&videoName=" + videoName,
+                onCallback
+            );
+        }
+    };
+})();
+window.gaodun_callback = gaodun_callback;

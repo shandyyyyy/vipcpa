@@ -1,0 +1,75 @@
+@import "common";
+@left:~'calc(50% - 25px)';
+
+.course_tabs{
+  .am-tabs-default-bar-tab{
+    width: 25% !important;
+  }
+  .am-tabs-default-bar-underline{
+    width: 15% !important;
+  }
+}
+.course_list{
+  color: @fontColor;
+  &:last-child{
+    .line{
+      display: none;
+    }
+  }
+  .title{
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .body{
+    font-size: 14px;
+    line-height: 20px;
+    .arrow{
+      display: inline-block;
+      float: right;
+    }
+  }
+  .progress{
+    .wrap{
+      position: relative;
+      height: 24px;
+      line-height: 24px;
+      background-color: #ebebeb;
+      border-radius: 3px;
+      .inner{
+        background-color: #ffb400;
+        height: 24px;
+        width: 100px;
+        border-radius: 3px 0 0 3px;
+      }
+      >span{
+        line-height: 24px;
+        color: #fff;
+        position: absolute;
+        top: 0;
+        left:50px
+      }
+      &.finish{
+        .inner{
+          width: 100%;
+          border-radius: 3px;
+        }
+        >span{
+          left: @left;
+        }
+      }
+      &.meeting{
+        .inner{
+          width: 0;
+        }
+        >span{
+          left: @left;
+          color: @yellowColor;
+        }
+      }
+    }
+
+  }
+}
+.am-calendar .content{
+  position: relative !important;
+}

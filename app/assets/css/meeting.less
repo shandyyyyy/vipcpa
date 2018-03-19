@@ -1,0 +1,219 @@
+@import "common";
+
+.meeting {
+  background-color: #f2f5f8;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+
+  .nextCourse {
+    height: 160px;
+    width: 100%;
+    background-image: url(https://gaodun-uploadfiles.oss-cn-hangzhou.aliyuncs.com/class/cover/0);
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    .groupName {
+      font-size: 22px;
+      font-weight: 600;
+    }
+    .wrap-pro {
+      margin-top: 20px;
+    }
+    .wrap-pro, .inner-pro {
+      line-height: 8px;
+      height: 8px;
+      background-color: rgba(160, 160, 160, 0.8);
+      border-radius: 30px;
+      width: 100%;
+    }
+    .inner-pro {
+      background-color: @yellowColor;
+    }
+  }
+
+  .wrap {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .courseInfo {
+    padding: 30px 20px;
+    color: #fff;
+    font-size: 15px;
+    line-height: 35px;
+  }
+
+  .courseInfo > div {
+    margin: 8px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tabs {
+    color: #333;
+    line-height: 50px;
+    display: flex;
+    background-color: #fff;
+    margin-bottom: 10px;
+    .tab_list {
+      width: 300%;
+    }
+    .tab {
+      flex: 1;
+      font-weight: 600;
+      font-size: 16px;
+      text-align: center;
+      float: left;
+      padding: 0 16px;
+    }
+    .tab.active {
+      color: #36ca78;
+      position: relative;
+    }
+    .tab.active::before {
+      content: '';
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      margin-left: -10px;
+      border-radius: 3px;
+      border: 1px solid #36ca78;
+      width: 14px;
+      height: 1px;
+      background-color: #36ca78;
+    }
+  }
+  .am-navbar {
+    background-color: #fff;
+  }
+  .am-navbar-light {
+    color: @fontColor;
+  }
+  .kind_list {
+    .navigator_list {
+      position: relative;
+      margin-top: 10px;
+      background-color: #fff;
+      padding: 10px 0;
+      .time {
+        font-size: 14px;
+        color: #8594a3;
+        line-height: 18px;
+        height: 18px;
+        margin-top: 6px;
+        border-left: 4px solid #8594a3;
+        font-weight: 600;
+        padding: 0 6px;
+        span{
+          display: inline-block;
+          margin-left: 10px;
+          background-color:#e1f6ef;
+          border-radius: 3px;
+          border-color: transparent;
+          color: @greenColor;
+          padding: 0 4px;
+          font-weight: normal;
+          font-size: 12px;
+        }
+      }
+      .meetingName {
+        padding: 0 10px;
+        line-height: 40px;
+        font-size: 15px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #444;
+      }
+    }
+    .navigator_list.ongoing .time {
+      color: @greenColor;
+      border-left: 4px solid @greenColor;
+    }
+    .navigator_list.ongoing .time text {
+      display: inline-block;
+    }
+    .navigator_list:first-child {
+      border: none;
+      margin-top: 0px;
+    }
+    .navigator_list:last-child {
+      margin-bottom: 10px;
+    }
+    .btn_box{
+      overflow: hidden;
+      padding: 0 10px;
+      .button{
+        float: left;
+        padding: 0 14px;
+        line-height: 30px;
+        height: 30px;
+        border-radius: 30px;
+        font-size: 12px;
+        margin-right: 6px;
+        background-color: #f6f7f9;
+        color: #666;
+        span{
+          vertical-align: super;
+          margin-right: 3px;
+        }
+      }
+      .stat {
+        float:left;
+        line-height:30px;
+        color:#8899a9;
+        font-size:12px;
+        margin-right: 6px;
+      }
+      .replay{
+        background-color: @yellow2Color;
+        color: #fff;
+      }
+      .ongoing{
+        background-color: @greenColor;
+        color: #fff;
+      }
+    }
+  }
+}
+.meeting_modal{
+  //
+  .am-modal-content{
+    border-radius: 10px 10px 0 0;
+  }
+  .modal_content>div{
+    background-color: #fff;
+  }
+  .modal_title{
+    color: @fontColor;
+    margin-bottom: 20px;
+    font-size: 16px;
+    &::before{
+      background-color: @fontColor;
+      border-color: @fontColor;
+    }
+  }
+  .am-steps-vertical .am-steps-item-content{
+    text-align: left;
+  }
+  .am-steps-item-title{
+    color: @fontColor;
+    font-weight: normal;
+    font-size: 15px;
+  }
+  .am-steps-item-description{
+    color: #aaa;
+    font-size: 13px;
+  }
+  .am-steps-item-finish .am-steps-item-tail:after{
+    background-color: @yellowColor;
+  }
+  .am-steps-item-finish .am-steps-item-icon > .am-steps-icon{
+    color: @yellowColor;
+  }
+}

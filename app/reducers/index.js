@@ -9,6 +9,7 @@ import * as member from './member';
 import * as exercise from './exercise';
 import * as selectcourse from './selectcourse';
 import * as modal from './modal';
+import * as room from './room';
 const rootReducer = combineReducers({
     routing,
     config: (state = {}) => state,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
     ...exercise,
     ...selectcourse,
     ...modal,
+    ...room,
 });
 
 export default rootReducer;

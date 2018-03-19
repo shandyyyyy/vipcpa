@@ -1,6 +1,4 @@
-@redColor:#ea3e3f;
-@blueColor:#008489;
-
+@import "common";
 .login {
   font-size: 16px !important;
   padding: 22px;
@@ -23,7 +21,7 @@
   }
   .am-list-item .am-input-label,
   .am-list-item .am-input-control input{
-    font-size: 15px !important;
+    font-size: 16px !important;
   }
   .forgot{
     display: block;
@@ -62,10 +60,21 @@
   font-size: 18px;
 }
 .icon-eye{
-  font-size: 20px;
+  font-size: 22px;
 }
-.root .am-list-item .am-input-label.am-input-label-5{
-  max-width: 85px;
-  width: auto;
-  margin-right: 10px;
+:global{
+  .login {
+    .am-list-item.am-input-item,
+    .am-list-item .am-list-line{
+      padding: 0;
+    }
+    .am-list-item:not(:last-child) .am-list-line{
+      border-bottom: 1px solid #ddd;
+    }
+    .am-list-item .am-input-label.am-input-label-5{
+      max-width: 85px;
+      width: auto;
+      margin-right: 10px;
+    }
+  }
 }

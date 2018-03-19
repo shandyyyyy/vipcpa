@@ -1,4 +1,3 @@
-import React, {Component} from 'react';
 import {Provider} from 'react-redux';
 import {AppContainer as HotContainer} from 'react-hot-loader';
 import {Router, Switch} from 'react-router-dom'
@@ -9,7 +8,7 @@ import createHistory from 'history/createHashHistory'
 const history = createHistory();
 import App from './App';
 
-export default class Root extends Component {
+export default class Root extends React.Component {
     render() {
         const {store} = this.props;
         return (

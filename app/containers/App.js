@@ -3,20 +3,22 @@ import { Link, Route, Switch ,IndexRoute , Redirect } from 'react-router';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import '../assets/css/base.less';
 import '../assets/css/font.less';
+import '../assets/css/common.less';
 import NotFound from './NotFound';
 import Login from './Login';
 import Register from './Register';
 import Password from './Password';
 import Index from './index';
-import StudyPlay from '../components/studyPlay';
-import Course from '../components/course';
-import Room from '../components/room';
-import Me from '../components/me';
-import TopList from './topList';
+// import Room from '../components/room';
+import TopListPage from './TopListPage';
+import AddIssue from './AddIssue';
+import Meeting from './meeting';
+import Order from '../components/me/order';
+import Note from '../components/me/note';
+import Issue from '../components/me/issue';
 
-import Product from './Product';
-import ProductSearch from './Product/search';
-import '../assets/js/global'
+// import '../assets/js/global';
+import '../assets/js/gaodun_callback';
 
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 export default class App extends Component {
@@ -36,13 +38,18 @@ export default class App extends Component {
                     return (
                             <Switch key={location.pathname} location={location}>
                                 <Route exact path="/" component={Login} />
+                                <Route exact path="/login" component={Login} />
 								<Route  path="/register" component={Register} />
 								<Route  path="/password" component={Password} />
-                                <Route  path="/404" component={NotFound} />
                                 <Route path="/index" component={Index} />
-								<Route path="/topList" component={TopList} />
-                                <Route exact path="/product" component={Product} />
-                                <Route exact path="/search" component={ProductSearch} />
+                                {/*<Route path="/room" component={Room} />*/}
+                                <Route path="/room/addIssue" component={AddIssue} />
+								<Route path="/room/topListPage" component={TopListPage} />
+                                <Route path="/course/meeting" component={Meeting} />
+                                <Route path="/me/order" component={Order} />
+                                <Route path="/me/note" component={Note} />
+                                <Route path="/me/issue" component={Issue} />
+                                <Route  path="/404" component={NotFound} />
                             </Switch>
                     )
                 }}>

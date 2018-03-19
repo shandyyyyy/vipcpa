@@ -1,8 +1,83 @@
+
+:global(#root){
+    .am-button::before{
+        background-color: transparent;
+        border: none;
+    }
+    //navbar
+    .am-navbar-dark{
+        background-color: #818992;
+        color: #ffffff;
+        position: fixed;
+        width: 100%;
+        z-index: 9;
+    }
+    .am-navbar-light{
+        background-color: #fff;
+        color: #484848;
+        position: fixed;
+        width: 100%;
+        z-index: 9;
+    }
+    //toast
+    .am-toast-notice-content .am-toast-text{
+        padding: 15px;
+    }
+    // list border
+    .am-list-body::before,
+    .am-list-body::after,
+    .am-list-item:not(:last-child) .am-list-line::after,
+    .am-list-item .am-list-line::after,
+    .am-list-body div:not(:last-child) .am-list-line::after{
+        background-color: transparent !important;
+    }
+    //覆盖原来的背景色
+    .am-list-item.am-list-item-active{
+        background-color: transparent;
+    }
+    //tabs
+    .am-tabs-default-bar-top .am-tabs-default-bar-tab::after{
+        background-color: transparent !important;
+    }
+    .am-tabs-default-bar{
+        box-shadow: 0 4px 6px rgba(0,0,0,.05);
+    }
+    //loading
+    .loading-example{
+        margin-top: 10px;
+        text-align: center;
+    }
+    .am-activity-indicator{
+        display: block;
+        text-align: center;
+    }
+    //
+    .line{
+        border-bottom: 1px solid #ddd;
+        height: 1px;
+    }
+    .classTip{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: auto;
+        word-break: break-all;
+        max-width: 300px;
+        padding: 10px;
+        box-sizing: border-box;
+        background-color: #484848;
+        border-radius: 5px;
+        color: #fff;
+        text-align: justify;
+        justify-content: center;
+    }
+}
+
 body {
     font-family: "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei";
     background-color: #fff !important;
     color: #484848 !important;
-    font-size: 15px !important;
+    font-size: 16px !important;
     p{
         margin: 0 !important;
     }
@@ -46,71 +121,6 @@ body {
     transition: opacity 300ms ease-in;
 }
 
-.example {
-    position: relative;
-}
-
-.header {
-    height: 80px;
-    line-height: 80px;
-    background: #171f32;
-    .header-bd {
-        width: 1200px;
-        margin: 0 auto;
-    }
-    .logo {
-        float: left;
-        width: 480px;
-        height: 78px;
-
-        img {
-            vertical-align: middle;
-        }
-    }
-    .avatar-img {
-        width: 58px;
-        height: 58px;
-        border-radius: 50%;
-        vertical-align: middle;
-        margin-right: 10px;
-
-        &.ant-avatar > * {
-            line-height: 58px;
-            font-size: 40px;
-        }
-    }
-
-    .menu {
-        background: transparent;
-        font-size: 16px;
-        color: #fff;
-        border-bottom: none;
-
-        li {
-            display: inline-block;
-            margin-left: 25px;
-            margin-right: 25px;
-            padding: 0 12px;
-
-            a {
-                color: inherit;
-            }
-
-            &.active {
-                color: #daa360;
-                border-bottom: 4px solid #daa360;
-            }
-        }
-        .ant-menu.ant-menu-dark .ant-menu-item-selected {
-            background: initial;
-        }
-    }
-    .login-or-regist {
-        font-size: 16px;
-        float: right;
-        color: #fff;
-    }
-}
 .userMenu {
 	&.ant-dropdown-menu {
 		border-radius: 6px;

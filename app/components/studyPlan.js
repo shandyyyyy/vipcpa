@@ -11,9 +11,10 @@ import {
 	Modal,
 	List,
 	Radio,
-	Checkbox
+	Checkbox,
+    Carousel
 } from 'antd-mobile';
-import '../assets/css/studyPlay.less';
+import '../assets/css/studyPlan.less';
 // import  '../util/util';
 // import {formatDate, formatMinuteTime} from "../util/util";
 
@@ -35,7 +36,7 @@ const RadioItem = Radio.RadioItem;
 	(dispatch) => bindActionCreators({...actions}, dispatch)
 )
 
-export default class StudyPlay extends React.Component {
+export default class StudyPlan extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -119,7 +120,7 @@ export default class StudyPlay extends React.Component {
 			this.props.changeModalState(true);
 		}
 	};
-	startPlay = (key) => {
+	startPlan = (key) => {
 		this.props.changeModalState(false);
 		this.setState({
 			count: ++this.state.count
@@ -157,8 +158,11 @@ export default class StudyPlay extends React.Component {
 		const extra = (selected) => (
 			<Icon type="check-circle" color={selected ? "#36ca78" : "#eee"}/>
 		);
+        const point = () => (
+            <span className="point">今天<i /></span>
+        );
 		return (
-			<div className="studyPlay">
+			<div className="studyPlan">
 				<WingBlank>
 					<WhiteSpace size="lg"/>
 					<Flex className="title">
@@ -171,7 +175,19 @@ export default class StudyPlay extends React.Component {
 					<WhiteSpace size="lg"/>
 				</WingBlank>
 				<section>
-					时间，抓起来是黄金，抓不起是流水。
+                    <Carousel className="my-carousel"
+                              vertical
+                              dots={false}
+                              dragging={false}
+                              swiping={false}
+                              autoplay
+                              infinite
+                    >
+                        <div className="v-item">时间，抓起来是黄金，抓不起是流水。1</div>
+                        <div className="v-item">时间，抓起来是黄金，抓不起是流水。2</div>
+                        <div className="v-item">时间，抓起来是黄金，抓不起是流水。3</div>
+                    </Carousel>
+
 				</section>
 				<div className="today_date">
 					<WingBlank>
@@ -182,9 +198,10 @@ export default class StudyPlay extends React.Component {
 							<Flex.Item>
 								<p>3 个任务</p>
 								<p> {this.state.todayShow
-									? '今天 ' + this.state.today
-									: this.state.currentDay
+									?  point()
+									: ''
 								}
+									{this.state.currentDay}
 								</p>
 							</Flex.Item>
 							{/*<Flex.Item className="my_ellipsis">*/}
@@ -202,11 +219,11 @@ export default class StudyPlay extends React.Component {
 				</div>
 				<WingBlank>
 					<WhiteSpace size="lg"/>
-					<Button type="warning" className="startPlay"
+					<Button type="warning" className="startPlan"
 							onClick={() => this.showModal()}>{this.state.time > 0 ? this.state.time : "开始学习计时"}</Button>
 					<WhiteSpace size="lg"/>
 					{/*//modal*/}
-					<MyModal  startPlay={this.startPlay}/>
+					<MyModal  startPlan={this.startPlan}/>
 				</WingBlank>
 				<List className="list_play">
 					{this.state.data.map(i => (

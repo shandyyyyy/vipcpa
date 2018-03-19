@@ -101,4 +101,8 @@ module.exports = {
         host: '127.0.0.1',
         port: 8091,
     },
+    externals: {
+        'react': 'window.React',
+        'react-dom': 'window.ReactDOM'
+    }
 }

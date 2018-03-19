@@ -1,4 +1,6 @@
-.studyPlay{
+@import "common";
+
+.studyPlan{
   .title{
     line-height: 50px;
     .left{
@@ -10,32 +12,32 @@
       line-height: 18px;
       flex: none;
       p{
-        font-size: 12px;
+        font-size: 13px;
         color: #ccc;
         margin: 0;
       }
       .time{
-        font-size: 14px;
-        color: #484848;
+        font-size: 15px;
+        color: @fontColor;
       }
       span{
-        color: #484848;
+        color: @fontColor;
         font-size: 16px;
       }
     }
   }
   section{
-    padding: 40px 20px;
-    background-color: #008489;
+    padding: 50px 21px;
+    background-color: @blueColor;
     color: #fff;
   }
-  .startPlay{
+  .startPlan{
     font-size: 15px;
   }
   .today_date{
     .my_arrow,.my_ellipsis{
       flex: none;
-      color: #ea3e3f;
+      color: @redColor;
     }
     .my_ellipsis{
       .am-icon{
@@ -47,63 +49,41 @@
       line-height: 20px;
       color: #333;
     }
+    .point i{
+      display: inline-block;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background-color: @fontColor;
+      vertical-align: middle;
+      margin: 0 5px;
+    }
   }
   .list_play{
-    .am-list-body::before,
-    .am-list-body::after,
-    .am-list-item:not(:last-child) .am-list-line::after,
-    .am-list-item .am-list-line::after,
-    .am-list-body div:not(:last-child) .am-list-line::after{
-      background-color: transparent;
-    }
-    //.am-list-item .am-list-line .am-list-content{
-    //  padding-right: 40px;
-    //  color: #757575;
-    //}
-    //.am-list-item .am-list-line .am-list-brief{
-    //  color: #bcbcbc;
-    //}
-    //.am-list-item.am-radio-item .am-list-line .am-list-extra .am-radio{
-    //  top:7px !important;
-    //}
-    //.am-radio-inner{
-    //  padding: 10px;
-    //  border: 1px solid #808080;
-    //  border-radius: 50%;
-    //  margin-right: 5px;
-    //}
-    //.am-radio-inner:after{
-    //  top: 1.5px;
-    //  right: 7px;
-    //  width: 5px;
-    //  height: 10px;
-    //  border-color: #fff;
-    //}
-    //.am-radio-checked{
-    //  .am-radio-inner{
-    //    background-color: #36ca78;
-    //    border: 1px solid #36ca78;
-    //  }
-    //}
     .my_checkbox{
       flex: none;
     }
   }
-}
-.studyPlay_modal .am-modal-content {
-  background-color: transparent !important;
+  :global {
+    .am-list-body div:not(:last-child) .am-list-line {
+      border: none !important;
+    }
+  }
 }
 .modal_content{
-  background-color: #008489;
   border-radius: 10px 10px 0 0;
   color: #fff;
+  &>div{
+    padding: 0 15px;
+    background-color: @blueColor;
+  }
   .modal_title{
     text-align: center;
     font-size: 18px;
     color: #fff;
     position: relative;
     line-height: 30px;
-    padding-top: 15px;
+    padding-top: 20px;
     &::before{
       content: '';
       position: absolute;
@@ -125,15 +105,15 @@
     padding: 0 26px;
   }
   .am-button{
-    color: #008489;
+    color: @blueColor;
   }
   .info{
     background-color: #fff;
     h4{
-      line-height: 50px;
-      color: #008489;
+      line-height: 70px;
+      color: @blueColor;
       font-size: 18px;
-      margin: 10px 0;
+      margin: 0;
     }
     p{
       color: #353535;
@@ -142,6 +122,9 @@
       text-align: left;
     }
   }
+}
+.studyPlan_modal .am-modal-content {
+  background-color: transparent !important;
 }
 .am-modal-transparent .am-modal-content{
   padding-top: 25px;
@@ -162,11 +145,7 @@
   display: block;
   .am-modal-button{
     display: block;
-    color: #008489;
+    color: @blueColor;
     border-bottom: 1px solid #eee;
   }
-}
-//覆盖原来的背景色
-.am-list-item.am-list-item-active{
-  background-color: transparent;
 }

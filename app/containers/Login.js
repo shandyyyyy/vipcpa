@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, List, InputItem, Icon, WhiteSpace, WingBlank} from 'antd-mobile';
+import {Button, List, InputItem, Icon, WhiteSpace, WingBlank, Toast} from 'antd-mobile';
 import '../assets/css/base.less';
 import '../assets/css/login.less';
 // import {Hash} from '../assets/js/hash';
@@ -22,20 +22,21 @@ export default class Login extends Component {
 
 	handleSubmit = (e) => {
 		if (!this.state.userName || !this.state.password) {
+            Toast.fail('用户名或者密码不能为空',1);
 			return;
 		}
 		// 登录
 		this.setState({
 			loading: true
 		});
-		GLive.User.loginAsGaodunUser(
+		gaodun_callback.User.loginAsGaodunUser(
 			this.state.userName,
 			this.state.password,
 			(function (that) {
 				return function (resp) {
 					console.log(resp);
 					that.props.history.push({
-						pathname: '/product'
+						pathname: '/index'
 					});
 				}
 

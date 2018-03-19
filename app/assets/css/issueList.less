@@ -1,6 +1,6 @@
 @import "common";
-.room{
-  overflow: hidden;
+.issue_list{
+  overflow: auto;
   .title{
     line-height: 50px;
     .left{
@@ -18,23 +18,22 @@
       }
       .time{
         font-size: 16px;
-        color: @fontColor;
+        color: #484848;
         font-weight: 600;
       }
       span{
-        color: @fontColor;
+        color: #484848;
         font-size: 16px;
       }
     }
   }
   .today_issue_play{
     line-height: 30px;
-    color: @fontColor;
+    color: #484848;
     border-bottom: 1px solid #d5d5d5;
-    position: relative;
     h4{
       font-size: 14px;
-      color: @fontColor;
+      color: #484848;
       margin:0;
       line-height: 40px;
       font-weight: normal;
@@ -42,23 +41,10 @@
     p{
       font-size: 13px;
     }
-    .issue_btn{
-      position: absolute;
-      top: 50%;
-      right: -15px;
-      margin-top: -25px;
-      border-radius: 50px 0 0 50px;
-      width: 120px;
-      font-size: 15px;
-      &::before{
-        border: none;
-      }
-    }
-
   }
   .topIssue{
     font-size: 18px;
-    color:@fontColor;
+    color:#484848;
     font-weight: 600;
     .my_arrow{
       flex: none;
@@ -71,6 +57,7 @@
     }
   }
   .top_list{
+    color: #484848;
     .title{
       height: 50px;
       img{
@@ -83,7 +70,7 @@
         display: inline-block;
         float: left;
         margin-top: 4px;
-        margin-right: 10px;
+        margin-right:10px;
       }
       .title_right{
         line-height: 25px;
@@ -113,23 +100,35 @@
     .body,.answer{
       line-height: 20px;
       font-size:14px;
+      word-break: break-all;
     }
     .answer span{
       color: #ea3e3f;
+    }
+    img{
+      max-width: 100%;
+      width: auto;
+      height: auto;
     }
   }
   .top_list:last-child{
     border-bottom: none;
   }
-  .topList_box{
-    margin-top: 45px;
+  .line{
+    border-bottom:1px solid #ddd;
+    height:1px;
   }
-  .am-tabs-default-bar-underline{
-    width: 15% !important;
-  }
-  .am-tab-bar-item{
-    overflow: hidden;
+  .am-navbar{
+    background-color: #818992;
+    position: fixed;
+    width: 100%;
+    z-index: 9;
   }
 }
-
-
+.am-tab-bar-item{
+  overflow: hidden;
+}
+//覆盖原来的背景色
+.am-list-item.am-list-item-active{
+  background-color: transparent;
+}

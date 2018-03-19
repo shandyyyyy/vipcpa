@@ -13,7 +13,7 @@ import {
 	Radio,
 	Checkbox
 } from 'antd-mobile';
-import '../assets/css/studyPlay.less';
+import '../assets/css/studyPlan.less';
 const alert = Modal.alert;
 
 import { bindActionCreators } from 'redux';
@@ -29,6 +29,7 @@ class MyModal extends React.Component{
 	constructor(props) {
 		super(props);
 		this.state = {
+            pageHeight: document.documentElement.clientHeight - 20,
 			visible: false
 		};
 	}
@@ -42,10 +43,10 @@ class MyModal extends React.Component{
 				visible={this.props.state.changeModalReducer.show}
 				onClose={()=>this.onClose()}
 				animationType="slide-up"
-				className="studyPlay_modal"
+				className="studyPlan_modal"
 			>
 				<div className="modal_content" style={{maxHeight: this.state.pageHeight, overflowY: 'auto'}}>
-					<WingBlank>
+					<div >
 						<div className="modal_title">学习计时</div>
 						<div className="modal_body">
 							<WhiteSpace size="lg"/>
@@ -54,13 +55,13 @@ class MyModal extends React.Component{
 								请选择一种</h3>
 							<WhiteSpace size="lg"/>
 							<WhiteSpace size="lg"/>
-							<Button type="default" onClick={() => this.props.startPlay('tomato')}>番茄钟模式</Button>
+							<Button type="default" onClick={() => this.props.startPlan('tomato')}>番茄钟模式</Button>
 							<WhiteSpace size="lg"/>
-							<Button type="default" onClick={() => this.props.startPlay('free')}>自由模式</Button>
+							<Button type="default" onClick={() => this.props.startPlan('free')}>自由模式</Button>
 							<WhiteSpace size="lg"/>
 							<WhiteSpace size="lg"/>
 						</div>
-					</WingBlank>
+					</div>
 
 					<div className="info">
 						<WingBlank>

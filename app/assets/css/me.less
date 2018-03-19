@@ -1,0 +1,174 @@
+@width: ~'calc(100% - 50px)';
+.me_box {
+  color: #484848;
+  .header {
+    clear: both;
+    overflow: hidden;
+    .info {
+      float: left;
+      vertical-align: middle;
+      > div {
+        font-size: 24px;
+        font-weight: 600;
+        line-height: 40px;
+      }
+      > span {
+        font-size: 14px;
+        line-height: 20px;
+        display: inline-block;
+      }
+    }
+    img {
+      float: right;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #eee;
+    }
+    .set_date {
+      clear: both;
+      line-height: 60px;
+      color: #888;
+    }
+  }
+}
+
+.me_list {
+  .am-flexbox.am-flexbox-align-center {
+    border-bottom: 1px solid #eee;
+  }
+  .am-list-item {
+    padding-left: 0;
+    line-height: 64px;
+  }
+  .am-list-item .am-list-line .am-list-content {
+    color: #484848;
+    font-size: 15px;
+  }
+}
+
+.order {
+  .am-navbar {
+    background-color: #fff;
+    .am-navbar-left {
+      color: #484848;
+    }
+  }
+  .am-tabs-default-bar {
+    box-shadow: none !important;
+  }
+
+  .am-tabs-default-bar-tab {
+    width: 25% !important;
+  }
+
+  .am-tabs-default-bar-underline {
+    width: 19% !important;
+  }
+  .count {
+    margin: 25px 0 15px;
+    border-radius: 50px;
+    border: 1px solid #dddddd;
+    line-height: 50px;
+    color: #aaa;
+    text-align: center;
+  }
+  .am-list-item {
+    border-bottom: 1px solid #eee;
+    height: 60px;
+    line-height: 60px;
+    padding-left: 5px;
+  }
+  .am-list-item .am-list-line .am-list-content {
+    color: #484848;
+    font-size: 15px;
+  }
+  .am-list-item .am-list-line .am-list-extra {
+    //display: none;
+  }
+  .phone {
+    .am-input-label {
+      color: #484848;
+      font-size: 15px;
+    }
+    .am-input-control input {
+      text-align: right;
+      color: #888;
+    }
+  }
+  .order_text {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #eee;
+    height: 50px;
+    padding: 5px;
+    clear: both;
+    overflow: hidden;
+    .am-list-item {
+      height: 40px;
+      line-height: 40px;
+      border-radius: 30px;
+      border: 1px solid #ddd;
+      display: inline-block;
+      float: left;
+      width: @width;
+      padding: 0 0 0 20px;
+      .am-input-control input {
+        color: #484848;
+        font-size: 15px;
+      }
+    }
+    .am-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #ea3e3f;
+      color: #fff;
+      margin-left: 10px;
+      padding: 6px;
+    }
+  }
+}
+
+//预约列表
+.orderList {
+  color: #484848;
+  .card {
+    border-radius: 5px;
+    margin-bottom: 15px;
+    background-color: #008489;
+    padding: 10px;
+    > p {
+      line-height: 25px;
+      font-size: 14px;
+      color: #fff;
+    }
+    > div {
+      background-color: #fff;
+      border-radius: 8px;
+      font-size: 15px;
+      padding: 10px;
+      line-height: 30px;
+      .status {
+        color: #008489;
+        text-align: right;
+      }
+    }
+  }
+}
+
+//我的提问
+.top_list {
+  .body, .answer {
+    line-height: 20px;
+    font-size: 14px;
+  }
+  .answer span {
+    color: #ea3e3f;
+  }
+}
+
+.top_list:last-child {
+  border-bottom: none;
+}

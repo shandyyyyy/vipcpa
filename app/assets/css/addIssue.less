@@ -1,0 +1,36 @@
+@import "common";
+.addIssue{
+  .subject{
+    margin-top: 55px;
+    .button{
+      margin-right: 5px;
+      margin-bottom: 5px;
+      border:1px solid #d5d5d5;
+      color: @fontColor;
+      height: 35px;
+      line-height: 35px;
+      &::before{
+        border-color: #d5d5d5;
+      }
+      &.active{
+        border-color: @redColor;
+        background-color: @redColor;
+        color: #fff;
+        &::before{
+          border-color: @redColor;
+        }
+      }
+    }
+    .am-button-ghost.am-button-active{
+      border: 1px solid @redColor;
+    }
+  }
+
+  .textArea textarea{
+    color: @fontColor;
+    font-size: 15px;
+    border:none;
+    line-height: 25px;
+    width: 100%;
+  }
+}

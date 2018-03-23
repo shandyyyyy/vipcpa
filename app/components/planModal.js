@@ -1,5 +1,6 @@
 import React from 'react';
-import {
+import antdMobile from 'antd-mobile';
+const {
 	WingBlank,
 	WhiteSpace,
 	Grid,
@@ -12,7 +13,7 @@ import {
 	List,
 	Radio,
 	Checkbox
-} from 'antd-mobile';
+} = antdMobile;
 import '../assets/css/studyPlan.less';
 const alert = Modal.alert;
 

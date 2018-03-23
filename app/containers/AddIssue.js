@@ -1,14 +1,13 @@
 import React from 'react';
-import {
+import antdMobile from 'antd-mobile';
+const {
     WingBlank,
     WhiteSpace,
     NavBar,
     Icon,
-    ListView,
     Button,
-    TextareaItem,
     Toast
-} from 'antd-mobile';
+} = antdMobile;
 
 import '../assets/css/addIssue.less';
 
@@ -26,9 +25,11 @@ export default class AddIssue extends React.Component {
 
     componentDidMount() {
         let groupID = 27;
-        gaodun_callback.Group.querySubjectForGroup(groupID, (resp) => {
+        gaodun_callback.Group.querySubject((resp) => {
             if (resp.status === 0) {
                 let subject = resp.result;
+                gaodun_callback.Data.subjectMap = subject;
+                gaodun_callback.Methods.saveData();
                 let arr = [];
                 Object.keys(subject).map(key => {
                     let obj = {};
@@ -53,14 +54,15 @@ export default class AddIssue extends React.Component {
         this.props.history.push('/index/room');
     };
     chooseSubject = (index) => {
-        this.state.subject.forEach((item, index) => {
-            this.state.subject[index].active = '';
+        const {subject} = this.state;
+        subject.forEach((item, index) => {
+            subject[index].active = '';
         });
-        this.state.subject[index].active = 'active';
+        subject[index].active = 'active';
 
         this.setState({
-            subject: this.state.subject,
-            subjectIndex: index
+            subject: subject,
+            subjectIndex: subject[index].id
         });
     };
 
@@ -73,8 +75,25 @@ export default class AddIssue extends React.Component {
         else if (subjectIndex === 0) {
             Toast.info('请选择科目提交问题', 1);
         } else {
-            console.log(this.state.value);
-            // gaodun_callback.Class.askQuestion()
+            let classID = 2222;
+            let meetingID = 28703;
+            let type= 5;
+            let y = new Date().getFullYear();
+            let m = gaodun_callback.Methods.n2s( (new Date().getMonth())+1 ) ;
+            let key = y +''+ m;
+            let subKey = subjectIndex;
+            let question = value;
+            gaodun_callback.Class.askQuestion(classID, meetingID, type, key, subKey, question, (resp)=>{
+                if(resp.status === 0){
+                    Toast.success('提交成功',1 ,()=>{
+                        this.props.history.push({
+                            pathname:'/index/room/myIssue'
+                        });
+                    });
+                }else{
+                    Toast.fail('提交失败', 1);
+                }
+            })
         }
     };
 

@@ -11,9 +11,9 @@ const PORT = 3010
 const theme = require('./antd-theme.js');
 module.exports = {
     entry: {
-        js: ['react-hot-loader/patch', 'webpack-dev-server/client?http://localhost:8091', 'webpack/hot/only-dev-server', './app/client.js'],
+        js: ['react-hot-loader/patch', 'webpack-dev-server/client?http://localhost:14003', 'webpack/hot/only-dev-server', './app/client.js'],
         vendor: [
-            'react', 'classnames', 'react-router', 'react-dom',
+            'react', 'react-router', 'react-dom',
         ],
     },
     output: {
@@ -76,6 +76,7 @@ module.exports = {
         // new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.optimize.CommonsChunkPlugin({
             name: 'vendor', // 入口文件名
+            chunks: ['vendor','js'],
             filename: 'vendor.bundle.js', // 打包后的文件名
         }),
         /* 压缩优化代码开始  可以关掉*/
@@ -99,10 +100,12 @@ module.exports = {
         inline: true,
         // proxy: casProxy(),
         host: '127.0.0.1',
-        port: 8091,
+        port: 14003,
     },
     externals: {
         'react': 'window.React',
-        'react-dom': 'window.ReactDOM'
+        'react-dom': 'window.ReactDOM',
+        //'react-router-dom': /Router?$/,
+        'antd-mobile':'antdMobile'
     }
 }

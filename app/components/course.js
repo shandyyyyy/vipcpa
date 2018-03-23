@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Route} from 'react-router-dom';
-import {
+import antdMobile from 'antd-mobile';
+const {
     WingBlank,
     WhiteSpace,
     Grid,
@@ -14,7 +15,7 @@ import {
     List,
     Tabs,
     ActivityIndicator
-} from 'antd-mobile';
+} = antdMobile;
 import '../assets/css/course.less';
 
 import CourseList from './course/courseList';
@@ -28,7 +29,6 @@ const tabs = [
     {title: "课程"},
     {title: "直播表"}
 ];
-
 
 
 export default class Course extends React.Component {
@@ -95,6 +95,7 @@ export default class Course extends React.Component {
                           initialPage={this.state.tabIndex}
                           tabBarUnderlineStyle={{borderColor:'#008489',left:this.state.left}}
                           tabBarActiveTextColor="#008489"
+                          swipeable={false}
                           onChange={(tab, index) => {
                               this.changeTab(index);
                           }}

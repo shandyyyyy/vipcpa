@@ -1,67 +1,69 @@
 @import "common";
-@left:~'calc(50% - 25px)';
 
-.course_tabs{
-  .am-tabs-default-bar-tab{
+@left: ~'calc(50% - 25px)';
+
+.course_tabs {
+  .am-tabs-default-bar-tab {
     width: 25% !important;
   }
-  .am-tabs-default-bar-underline{
+  .am-tabs-default-bar-underline {
     width: 15% !important;
   }
 }
-.course_list{
+
+.course_list {
   color: @fontColor;
-  &:last-child{
-    .line{
+  &:last-child {
+    .line {
       display: none;
     }
   }
-  .title{
+  .title {
     font-size: 16px;
     font-weight: 600;
   }
-  .body{
+  .body {
     font-size: 14px;
     line-height: 20px;
-    .arrow{
+    .arrow {
       display: inline-block;
       float: right;
     }
   }
-  .progress{
-    .wrap{
+  .progress {
+    .wrap {
       position: relative;
       height: 24px;
       line-height: 24px;
       background-color: #ebebeb;
       border-radius: 3px;
-      .inner{
+      .inner {
         background-color: #ffb400;
         height: 24px;
         width: 100px;
         border-radius: 3px 0 0 3px;
       }
-      >span{
+      > span {
         line-height: 24px;
         color: #fff;
         position: absolute;
         top: 0;
-        left:50px
+        left: 50px
       }
-      &.finish{
-        .inner{
+      &.finish {
+        .inner {
           width: 100%;
           border-radius: 3px;
         }
-        >span{
+        > span {
           left: @left;
         }
       }
-      &.meeting{
-        .inner{
+      &.meeting {
+        .inner {
           width: 0;
         }
-        >span{
+        > span {
           left: @left;
           color: @yellowColor;
         }
@@ -70,6 +72,10 @@
 
   }
 }
-.am-calendar .content{
+
+.am-calendar .content {
   position: relative !important;
+  .confirm-panel {
+    display: none;
+  }
 }

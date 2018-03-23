@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
+import antdMobile from 'antd-mobile';
+const {
     WingBlank,
     WhiteSpace,
     NavBar,
     Icon,
     ListView,
     Toast
-} from 'antd-mobile';
+} = antdMobile;
 import '../assets/css/base.less';
 import '../assets/css/issueList.less';
 

@@ -1,5 +1,6 @@
 import React from 'react';
-import {
+import antdMobile from 'antd-mobile';
+const {
 	WingBlank,
 	WhiteSpace,
 	Grid,
@@ -11,7 +12,7 @@ import {
 	Modal,
 	List,
 	Tabs
-} from 'antd-mobile';
+} = antdMobile;
 import '../assets/css/me.less';
 
 
@@ -91,6 +92,12 @@ export default class Me extends React.Component {
 	};
 	handleClick = (i) => {
 		let type = i.type;
+		if(type === 'order'){
+            this.props.history.push({
+                pathname: `/me/${type}/create`
+            })
+			return;
+		}
         this.props.history.push({
             pathname: `/me/${type}`
         })

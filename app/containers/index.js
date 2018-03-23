@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link, Route, Switch, IndexRoute, Redirect} from 'react-router-dom';
-import {WingBlank, WhiteSpace, Flex, NavBar, Icon, Button, TabBar, ListView} from 'antd-mobile';
+import antdMobile from 'antd-mobile';
+const {WingBlank, WhiteSpace, Flex, NavBar, Icon, Button, TabBar, ListView} = antdMobile;
 
 import '../assets/css/tabBar.less';
 import StudyPlan from '../components/studyPlan';

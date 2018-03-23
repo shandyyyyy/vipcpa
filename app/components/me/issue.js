@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Route} from 'react-router-dom';
-import {
+import antdMobile from 'antd-mobile';
+
+const {
     WingBlank,
     WhiteSpace,
-    Flex,
     NavBar,
     Icon,
     ListView,
     Toast
-} from 'antd-mobile';
+} = antdMobile;
 import '../../assets/css/base.less';
 import '../../assets/css/me.less';
 import '../../assets/css/issueList.less';
@@ -22,6 +23,7 @@ function MyBody(props) {
         </div>
     );
 }
+
 export default class Issue extends React.Component {
     constructor(props) {
         super(props);
@@ -31,7 +33,7 @@ export default class Issue extends React.Component {
         this.state = {
             dataSource,
             isLoading: true,
-            userID: 10832,
+            userID: gaodun_callback.Data.me.id,
             issue: [],
             pageHeight: document.documentElement.clientHeight - 45,
         };
@@ -49,10 +51,10 @@ export default class Issue extends React.Component {
                 });
                 this.setState({
                     data: cpaClass
-                },()=>{
+                }, () => {
                     let questionTotal = [];
-                    this.state.data.forEach(item => {
-                        this.getIssue(item, questionTotal);
+                    this.state.data.forEach((item, index) => {
+                        this.getIssue(item,index, questionTotal);
                     })
                 });
             } else {
@@ -61,7 +63,7 @@ export default class Issue extends React.Component {
         });
     }
 
-    getIssue = (item, questionTotal) => {
+    getIssue = (item, index,questionTotal) => {
         gaodun_callback.Class.issueGet(item.id, (resp) => {
             if (resp.status === 0) {
                 let questions = [];
@@ -73,10 +75,11 @@ export default class Issue extends React.Component {
                 for (let i = 0; i < questions.length; i++) {
                     questions[i].time = gaodun_callback.Methods.formatTime(new Date(questions[i].questionUpdateTime));
                     questions[i].subKeyStr = gaodun_callback.Methods.formatTime(new Date(questions[i].subKey * 1000));
-                    questions[i].user = (questions[i].questionUpdater === parseInt(this.state.userID)) ? "我的提问" : "来自高顿同学的提问";
+                    questions[i].user = (questions[i].questionUpdater === parseInt(this.state.userID)) ? "me" : "other";
+                    questions[i].subject = gaodun_callback.Data.subjectMap[questions[i].subKey];
                     //数组
-                    // console.log(questions[i].questionBody);
-                    let arrs = questions[i].questionBody.split("\\n");
+                    let body = decodeURIComponent(questions[i].questionBody);
+                    let arrs = body.split("\\n");
                     let q_arrs = [];
                     for (let j = 0; j < arrs.length; j++) {
                         let map = {};
@@ -94,22 +97,31 @@ export default class Issue extends React.Component {
                 questionTotal.sort(function (a, b) {
                     return a.questionUpdateTime - b.questionUpdateTime;
                 });
-                setTimeout(() => {
-                    this.setState({
-                        dataSource: this.state.dataSource.cloneWithRows(questionTotal),
-                        isLoading: true,
-                        hasMore: false,
-                        issue: questionTotal,
+                if(index === this.state.data.length-1){
+                    let myQuestion = [];
+                    questionTotal.forEach(item=>{
+                        if(item.user === 'me'){
+                            myQuestion.push(item);
+                        }
                     });
-                })
+                    this.setState({
+                        dataSource: this.state.dataSource.cloneWithRows(myQuestion),
+                        isLoading: false,
+                        hasMore: false,
+                        issue: myQuestion,
+                    });
+                }
+
             } else {
                 Toast.info(resp.info, 1);
             }
         })
     };
+
     componentDidMount() {
 
     }
+
     onEndReached = (event) => {
         // load new data
         // hasMore: from backend data, indicates whether it is the last page, here is false
@@ -119,24 +131,23 @@ export default class Issue extends React.Component {
             return;
         }
     };
+
     onLeftClick = () => {
         this.props.history.push('/index/me');
     };
 
     render() {
-        let index = this.state.issue.length - 1;
+        const {issue} = this.state;
+        let index = issue.length - 1;
         const row = () => {
             if (index < 0) {
-                index = this.state.issue.length - 1;
+                index = issue.length - 1;
             }
-            const obj = this.state.issue[index--];
-            if (this.state.issue.length === 0) {
+            const obj = issue[index--];
+            if (issue.length === 0) {
                 console.log("数组长度为0");
                 return;
             }
-
-            console.log(obj);
-            console.log(index);
 
             return (
                 <div key={obj.id} className="top_list">
@@ -145,7 +156,7 @@ export default class Issue extends React.Component {
                         <div className="title">
                             <div className="title_right">
                                 <div className="nickname">我</div>
-                                <div className="time">{obj.time}<i>审计</i>
+                                <div className="time">{obj.time}<i>{obj.subject}</i>
                                     {obj.answerBody ? '' :
                                         <span className="status">等待处理</span>
                                     }
@@ -154,9 +165,9 @@ export default class Issue extends React.Component {
                         </div>
                         <WhiteSpace size="lg"/>
                         <div className="body">
-                            {obj.q_arr.map(item => (
+                            {obj.q_arr.map((item, index) => (
                                 item.img ?
-                                    <img src={item.body} alt="" key={item.body}/> :
+                                    <img src={item.body} alt="" key={item.body} /> :
                                     <div key={item.body}>{item.body}</div>
                             ))}
                         </div>
@@ -169,7 +180,7 @@ export default class Issue extends React.Component {
                             </div>
 
                             : ''}
-                        <div className="line" style={{borderBottom: '1px solid #ddd', height: '1px'}}></div>
+                        <div className="line"></div>
                     </WingBlank>
                 </div>
             );
@@ -181,13 +192,13 @@ export default class Issue extends React.Component {
                     className="navbar"
                     leftContent={<Icon type="cross"></Icon>}
                     onLeftClick={this.onLeftClick}>
+                    我的答疑
                 </NavBar>
                 <div style={{height: '45px'}}></div>
                 {/*<IssueList style={{height:this.state.pageHeight+'px'}}/>*/}
                 <div className="issue_list" ref={el => this.lv = el}>
                     <ListView
                         dataSource={this.state.dataSource}
-                        // renderHeader={() => <span>header</span>}
                         renderFooter={() => (<div style={{padding: 20, textAlign: 'center'}}>
                             {this.state.isLoading ? 'Loading...' : 'Loaded'}
                         </div>)}
@@ -197,10 +208,11 @@ export default class Issue extends React.Component {
                             height: this.state.pageHeight,
                             overflow: 'auto',
                         }}
-                        pageSize={3}
+                        pageSize={10}
                         onScroll={() => {
                             console.log('scroll');
                         }}
+                        initialListSize={10}
                         scrollRenderAheadDistance={50}
                         onEndReached={this.onEndReached}
                         onEndReachedThreshold={20}

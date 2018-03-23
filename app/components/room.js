@@ -1,7 +1,8 @@
 /*import React from 'react';
 import ReactDOM from 'react-dom';*/
 import {Route} from 'react-router-dom';
-import {
+import antdMobile from 'antd-mobile'
+const {
     WingBlank,
     WhiteSpace,
     Grid,
@@ -15,12 +16,13 @@ import {
     Tabs,
     Card,
     Tag,
-} from 'antd-mobile';
+} = antdMobile;
 import '../assets/css/base.less';
 import '../assets/css/room.less';
-import TopList from '../components/room/topList';
-import IssueList from '../components/issueList';
-import Report from '../components/room/report';
+import TopList from './room/topList';
+import Report from './room/report';
+import Interaction from './room/interaction';
+import MyIssue from "./room/myIssue";
 
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -87,7 +89,7 @@ export default class Room extends React.Component {
             tabIndex =  2;
             left = 55;
         }
-        if(location.pathname === '/index/room/interaction'){
+        if(location.pathname === '/room/interaction'){
             tabIndex =  3;
             left = 80;
         }
@@ -132,6 +134,13 @@ export default class Room extends React.Component {
             })
             return;
         }
+        if(index === 3 && `/room/${name}` !== location.pathname){
+            this.props.history.push({
+                pathname: `/room/${name}`
+            })
+            return;
+        }
+
         if(`/index/room/${name}` !== location.pathname){
             this.props.history.push({
                 pathname: `/index/room/${name}`
@@ -178,8 +187,8 @@ export default class Room extends React.Component {
                         <Route exact path={match.url} component={TopList}/>
                         {/*<TopList history={this.props.history}/>*/}
                     </div>
-                    <div style={{height: this.state.height+'px',overflow:'hidden'}}>
-                        <Route path={`${match.url}/myIssue`} component={IssueList} />
+                    <div style={{height: this.state.height+'px'}}>
+                        <Route path={`${match.url}/myIssue`} component={MyIssue} />
                         {/*<IssueList height={this.state.height} page={"myIssue"}/>*/}
                     </div>
                     <div style={{height: this.state.height+'px' }}>
@@ -187,7 +196,7 @@ export default class Room extends React.Component {
                         {/*<Report />*/}
                     </div>
                     <div style={{height: this.state.height+'px'}}>
-                        互动
+                        <Route path={`/room/interaction`} component={Interaction}/>
                     </div>
                 </Tabs>
             </div>

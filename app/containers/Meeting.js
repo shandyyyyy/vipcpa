@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
+import antdMobile from 'antd-mobile';
+const {
     WingBlank,
     WhiteSpace,
     NavBar,
@@ -12,7 +13,7 @@ import {
     Modal,
     Steps,
     ActivityIndicator
-} from 'antd-mobile';
+} = antdMobile;
 
 import '../assets/css/meeting.less';
 
@@ -29,7 +30,7 @@ export default class Meeting extends React.Component {
             groupID: 27,
             groupName: 'VIPCPA',
             template: 0,
-            progress: 10 || (gaodun_callback.Data.currentClass.progress.finishedNum / gaodun_callback.Data.currentClass.progress.total * 100).toFixed(2),
+            progress: 0,
             tabs: {},
             section: [],
             months: [],
@@ -37,22 +38,23 @@ export default class Meeting extends React.Component {
             isOngoing: false,
             showModal: false,
             arrays: [],
-            pageHeight: document.documentElement.clientHeight - 20
+            pageHeight: document.documentElement.clientHeight - 40
         };
     }
 
     componentWillMount() {
         gaodun_callback.GetData.getClass(60, (result) => {
-            // window.alert(JSON.stringify(result));
             let classID = result.id;
             let className = result.name;
             let groupID = result.groupID;
             let template = gaodun_callback.Methods.backConvert(result.template, 2)[1];
+            let progress = (result.classProgress.finishedNum / result.classProgress.total * 100).toFixed(2);
             this.setState({
                 classID: classID,
                 className: className,
                 groupID: groupID,
-                template: template
+                template: template,
+                progress: progress
             },()=>{
                 this.getDate();
             });
@@ -92,6 +94,7 @@ export default class Meeting extends React.Component {
                         return a.startTime - b.startTime;
                     });
                     meeting.forEach((item) => {
+                        item.arrowDown = true;
                         if (nowDay === parseInt(new Date(item.startTime).getTime() / 1000 / 60 / 60 / 24)) {
                             item.formatTime = gaodun_callback.Methods.formatTime(item.startTime) + "~" + gaodun_callback.Methods.formatTime(item.startTime + item.duration * 1000, false, true);
                         } else {
@@ -99,9 +102,6 @@ export default class Meeting extends React.Component {
                         }
                     });
                     this.state.meeting = this.classifyMeetings(meeting, timestamp);
-                    // this.setState({
-                    //     meeting: this.state.meeting
-                    // })
                 } else {
                     Toast.fail("出错了meeting", 1, function () {
                         history.back();
@@ -152,7 +152,6 @@ export default class Meeting extends React.Component {
                         currentSection: this.state.section.length > 0 ? this.state.section[0].section : 0,
                     });
                     // alert("ok");
-                    console.log(this.state)
                 } else {
                     Toast.fail("出错了progress", 1, function () {
                         history.back();
@@ -366,14 +365,21 @@ export default class Meeting extends React.Component {
         }
     };
     onClose = () => {
+        const {meeting} = this.state;
+        meeting.forEach(item=>{
+            item.arrowDown = true;
+        });
         this.setState({
+            meeting: meeting,
             showModal: false
         })
     };
     //进入课件
     showCourseware = (meeting, index) => {
+        const {template} = this.state;
+
         gaodun_callback.Data.currentMeetingObj = meeting;
-        meeting.template = meeting.liveType === "replay" ? 0 : this.state.template;
+        meeting.template = meeting.liveType === "replay" ? 0 : template;
         meeting.mStatus = (meeting.liveType === "replay" || meeting.liveType === "ongoing") ? true : false;
 
         let array = [];
@@ -484,6 +490,7 @@ export default class Meeting extends React.Component {
             }
             if (flag) {
                 this.state.meeting[index].array = array.slice(0, 1);
+                this.state.meeting[index].arrowDown = false;
                 this.state.arrays = array.slice(0, 1);
                 this.setState({
                     meeting: this.state.meeting,
@@ -498,6 +505,7 @@ export default class Meeting extends React.Component {
             if (meeting.template) {
                 console.log("可以看课前，课中");
                 this.state.meeting[index].array = array.slice(0, 2);
+                this.state.meeting[index].arrowDown = false;
                 this.state.arrays = array.slice(0, 2);
                 this.setData({
                     meeting: this.state.meeting,
@@ -507,6 +515,7 @@ export default class Meeting extends React.Component {
             } else {
                 console.log("可以看课前，课中,课后");
                 this.state.meeting[index].array = array;
+                this.state.meeting[index].arrowDown = false;
                 this.state.arrays = array;
                 this.setState({
                     meeting: this.state.meeting,
@@ -516,6 +525,7 @@ export default class Meeting extends React.Component {
             }
         } else {
             this.state.meeting[index].array = array;
+            this.state.meeting[index].arrowDown = false;
             this.state.arrays = array;
             this.setState({
                 meeting: this.state.meeting,
@@ -758,7 +768,7 @@ export default class Meeting extends React.Component {
                                                 <Button className="button"
                                                         onClick={() => this.showCourseware(meeting, index)}>
                                                     <span>展开学习</span>
-                                                    <Icon type={this.state.showModal ? 'up' : 'down'} size="md"></Icon>
+                                                    <Icon type={meeting.arrowDown ? 'down' : 'up'} size="md"></Icon>
                                                 </Button>
                                         }
                                         {
@@ -792,6 +802,7 @@ export default class Meeting extends React.Component {
                 <Modal
                     popup
                     visible={this.state.showModal}
+                    closable={true}
                     onClose={() => this.onClose()}
                     animationType="slide-up"
                     className="meeting_modal"

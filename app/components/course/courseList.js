@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
+import antdMobile from 'antd-mobile';
+const {
     WingBlank,
     WhiteSpace,
     Icon,
@@ -9,7 +10,7 @@ import {
     Flex,
     Toast,
     ActivityIndicator
-} from 'antd-mobile';
+} = antdMobile;
 import '../../assets/css/base.less';
 import '../../assets/css/course.less';
 
@@ -26,9 +27,6 @@ export default class CourseList extends React.Component {
     }
 
     componentWillMount() {
-    }
-
-    componentDidMount() {
         gaodun_callback.Class.query(
             (function (that) {
                 return function (resp) {
@@ -36,19 +34,18 @@ export default class CourseList extends React.Component {
                         let classList = resp.result.classList;
                         let cpaClass = [];
                         classList.forEach((item,index)=>{
-                            if(item.groupID === 27){
-                                cpaClass.push(item);
-                            }
-
+                            // if(item.groupID === 27){
+                            //     cpaClass.push(item);
+                            // }
+                            cpaClass.push(item);
                         });
                         cpaClass.forEach((item)=>{
-                            item.progress = that.handleMeeting(item.schedule);
+                            item.classProgress = that.handleMeeting(item.schedule);
                         });
                         that.setState({
                             data: cpaClass,
                             loading: false
                         });
-                        console.log(that.state)
                     } else {
                         Toast.fail("出错了", 1)
                     }
@@ -56,6 +53,10 @@ export default class CourseList extends React.Component {
 
             })(this)
         )
+    }
+
+    componentDidMount() {
+
     }
     handleMeeting(m){
         let obj = {
@@ -106,9 +107,9 @@ export default class CourseList extends React.Component {
                             </div>
                             <WhiteSpace size="lg"/>
                             <div className="progress">
-                                <div className={item.progress.finishedNum/item.progress.total*100 === 100?'wrap finish':(item.progress.finishedNum/item.progress.total*100 === 0?'wrap meeting':'wrap')} >
+                                <div className={item.classProgress.finishedNum/item.classProgress.total*100 === 100?'wrap finish':(item.classProgress.finishedNum/item.classProgress.total*100 === 0?'wrap meeting':'wrap')} >
                                     <div className="inner"></div>
-                                    <span>{item.progress.finishedNum}/{item.progress.total}</span>
+                                    <span>{item.classProgress.finishedNum}/{item.classProgress.total}</span>
                                 </div>
                             </div>
                             <WhiteSpace size="lg"/>

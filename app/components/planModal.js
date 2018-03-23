@@ -30,7 +30,6 @@ class MyModal extends React.Component{
 	constructor(props) {
 		super(props);
 		this.state = {
-            pageHeight: document.documentElement.clientHeight - 20,
 			visible: false
 		};
 	}
@@ -38,6 +37,7 @@ class MyModal extends React.Component{
 		this.props.changeModalState(false);
 	};
 	render(){
+		const pageHeight = this.props.pageHeight;
 		return (
 			<Modal
 				popup
@@ -46,7 +46,7 @@ class MyModal extends React.Component{
 				animationType="slide-up"
 				className="studyPlan_modal"
 			>
-				<div className="modal_content" style={{maxHeight: this.state.pageHeight, overflowY: 'auto'}}>
+				<div className="modal_content" style={{maxHeight: pageHeight, overflowY: 'auto'}}>
 					<div >
 						<div className="modal_title">学习计时</div>
 						<div className="modal_body">

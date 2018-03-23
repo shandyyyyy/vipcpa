@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Route} from 'react-router-dom';
-import {
+import antdMobile from 'antd-mobile';
+const {
     WingBlank,
     WhiteSpace,
     Flex,
@@ -10,7 +11,7 @@ import {
     Button,
     Toast,
     ActivityIndicator
-} from 'antd-mobile';
+} = antdMobile;
 import '../../assets/css/base.less';
 import '../../assets/css/me.less';
 import IssueList from '../../components/issueList';

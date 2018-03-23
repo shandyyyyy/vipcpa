@@ -1,43 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
+import antdMobile from 'antd-mobile';
+
+const {
     WingBlank,
     WhiteSpace,
     NavBar,
     Icon,
-    ListView
-} from 'antd-mobile';
-import '../assets/css/room.less';
+    ListView,
+    Toast
+} = antdMobile;
+import '../assets/css/issueList.less';
 
 const NUM_ROWS = 20;
 let pageIndex = 0;
-
-const data = [
-    {
-        id: 1,
-        finished: false,
-        label: 'basketball basketballbasketballbasketballbasketball',
-        brief: 'details',
-        extra: false,
-        thumb: '//zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png'
-    },
-    {
-        id: 2,
-        finished: false,
-        label: 'football',
-        brief: 'details',
-        extra: true,
-        thumb: '//zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png'
-    },
-    {
-        id: 3,
-        finished: true,
-        label: 'football',
-        brief: 'details',
-        extra: true,
-        thumb: '//zos.alipayobjects.com/rmsportal/UmbJMbWOejVOpxe.png'
-    }
-];
 
 function MyBody(props) {
     return (
@@ -59,6 +35,7 @@ export default class TopListPage extends React.Component {
         this.state = {
             dataSource,
             isLoading: true,
+            issue: [],
             height: document.documentElement.clientHeight * 3 / 4,
         };
     }
@@ -66,17 +43,17 @@ export default class TopListPage extends React.Component {
     componentDidMount() {
         // you can scroll to the specified position
         // setTimeout(() => this.lv.scrollTo(0, 120), 800);
-
-        const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).parentNode.offsetTop;
-        // simulate initial Ajax
-        setTimeout(() => {
-            this.rData = data;
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(data),
-                isLoading: false,
-                height: hei,
-            });
-        }, 600);
+        this.getIssue();
+        // const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).parentNode.offsetTop;
+        // // simulate initial Ajax
+        // setTimeout(() => {
+        //     this.rData = data;
+        //     this.setState({
+        //         dataSource: this.state.dataSource.cloneWithRows(data),
+        //         isLoading: false,
+        //         height: hei,
+        //     });
+        // }, 600);
     }
 
     // If you use redux, the data maybe at props, you need use `componentWillReceiveProps`
@@ -87,6 +64,7 @@ export default class TopListPage extends React.Component {
     //     });
     //   }
     // }
+
     onEndReached = (event) => {
         // load new data
         // hasMore: from backend data, indicates whether it is the last page, here is false
@@ -105,39 +83,95 @@ export default class TopListPage extends React.Component {
         }, 1000);
     };
 
+    getIssue() {
+        let roomID = gaodun_callback.Data.roomID;
+        gaodun_callback.Class.issueGet(roomID, (resp) => {
+            if (resp.status === 0) {
+                let questions = [];
+
+                let finished = resp.result.finished;
+                let unfinished = resp.result.unfinished;
+                questions = finished.concat(unfinished);
+                for (let i = 0; i < questions.length; i++) {
+                    questions[i].time = gaodun_callback.Methods.formatTime(new Date(questions[i].questionUpdateTime));
+                    questions[i].subKeyStr = gaodun_callback.Methods.formatTime(new Date(questions[i].subKey * 1000));
+                    questions[i].user = (questions[i].questionUpdater === parseInt(this.state.userID)) ? "我的提问" : "来自高顿同学的提问";
+                    questions[i].subject = gaodun_callback.Data.subjectMap[questions[i].subKey];
+                    //数组
+                    let body = decodeURIComponent(questions[i].questionBody);
+                    let arrs = body.split("\\n");
+                    let q_arrs = [];
+                    for (let j = 0; j < arrs.length; j++) {
+                        let map = {};
+                        if (arrs[j].indexOf("data:image/png") > -1 || arrs[j].indexOf("//") > -1) {
+                            map.img = true;
+                        } else {
+                            map.img = false;
+                        }
+                        map.body = arrs[j];
+                        q_arrs.push(map);
+                    }
+                    questions[i].q_arr = q_arrs;
+                }
+                questions.sort(function (a, b) {
+                    return a.questionUpdateTime - b.questionUpdateTime;
+                });
+                this.setState({
+                    isLoading: true,
+                    dataSource: this.state.dataSource.cloneWithRows(questions),
+                    hasMore: false,
+                    issue: questions,
+                });
+            } else {
+                Toast.info(resp.info, 1);
+            }
+        })
+    }
+
     onLeftClick = () => {
         this.props.history.push('/index/room');
     };
 
     render() {
-
+        const {issue} = this.state;
         let index = 0;
         const row = () => {
-            if (data.length === 0) {
+            if (issue.length === 0) {
                 console.log("数组长度为0");
             }
-            const obj = data[index++];
+            const obj = issue[index++];
             // console.log(obj);
             return (
                 <div key={obj.id} className="top_list">
-                    <WhiteSpace size="lg"/>
+                    <WhiteSpace/>
                     <div className="title">
-                        <img src="" alt=""/>
                         <div className="title_right">
-                            <div className="nickname">{obj.id}nickname</div>
-                            <div className="time">time <i>审计</i></div>
+                            <div className="nickname">我</div>
+                            <div className="time">{obj.time}<i>{obj.subject}</i>
+                                {obj.answerBody ? '' :
+                                    <span className="status">等待处理</span>
+                                }
+                            </div>
                         </div>
                     </div>
-                    <WhiteSpace size="lg"/>
+                    <WhiteSpace/>
                     <div className="body">
-                        老师，我想问一下，当集团的会计在给整个集团编报表的时候，需要考虑税费吗？还要去税务局交税吗？谢谢老师
+                        {obj.q_arr.map(item => (
+                            item.img ?
+                                <img src={item.body} alt="" key={item.body}/> :
+                                item.body
+                        ))}
                     </div>
-                    <WhiteSpace size="lg"/>
-                    <div className="answer">
-                        <span>老师：</span>
-                        同学，你好！不需要！考虑递延的就好！
-                    </div>
-                    <WhiteSpace size="lg"/>
+                    <WhiteSpace/>
+                    {obj.answerBody ?
+                        <div className="answer">
+                            <span>老师：</span>
+                            {obj.answerBody}
+                            <WhiteSpace size="lg"/>
+                        </div>
+
+                        : ''}
+                    <div className="line"></div>
                 </div>
             );
         };

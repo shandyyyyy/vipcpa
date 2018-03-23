@@ -1,14 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Route} from 'react-router-dom';
-import {
+import antdMobile from 'antd-mobile';
+
+const {
     WingBlank,
     WhiteSpace,
     Icon,
     List,
     Button,
-    Flex
-} from 'antd-mobile';
+    Flex,
+    Toast
+} = antdMobile;
 import '../../assets/css/base.less';
 import '../../assets/css/report.less';
 
@@ -20,38 +23,57 @@ export default class TopList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: [
-                {
-                    id: 1,
-                    finished: false,
-                    label: 'basketball basketballbasketballbasketballbasketball',
-                    brief: 'details',
-                    extra: false,
-                    thumb: '//zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png'
-                },
-                {
-                    id: 2,
-                    finished: false,
-                    label: 'football',
-                    brief: 'details',
-                    extra: true,
-                    thumb: '//zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png'
-                },
-                {
-                    id: 3,
-                    finished: true,
-                    label: 'football',
-                    brief: 'details',
-                    extra: true,
-                    thumb: '//zos.alipayobjects.com/rmsportal/UmbJMbWOejVOpxe.png'
-                },
-            ]
+            userID: gaodun_callback.Data.me.id,
+            issue: []
         };
     }
-    componentWillMount(){
-        // pubsub.publish('changeTabState',{
-        //     index: 0,
-        // });
+
+    componentWillMount() {
+        this.getIssue();
+    }
+
+    getIssue() {
+        let roomID = gaodun_callback.Data.roomID;
+        gaodun_callback.Class.issueGet(roomID, (resp) => {
+            if (resp.status === 0) {
+                let questions = [];
+
+                let finished = resp.result.finished;
+                let unfinished = resp.result.unfinished;
+                questions = finished.concat(unfinished);
+                for (let i = 0; i < questions.length; i++) {
+                    questions[i].time = gaodun_callback.Methods.formatTime(new Date(questions[i].questionUpdateTime));
+                    questions[i].subKeyStr = gaodun_callback.Methods.formatTime(new Date(questions[i].subKey * 1000));
+                    questions[i].user = (questions[i].questionUpdater === parseInt(this.state.userID)) ? "我" : "来自高顿同学";
+                    questions[i].subject = gaodun_callback.Data.subjectMap[questions[i].subKey];
+                    //数组
+                    let body = decodeURIComponent(questions[i].questionBody);
+                    let arrs = body.split("\\n");
+                    let q_arrs = [];
+                    for (let j = 0; j < arrs.length; j++) {
+                        let map = {};
+                        if (arrs[j].indexOf("data:image/png") > -1 || arrs[j].indexOf("//") > -1) {
+                            map.img = true;
+                        } else {
+                            map.img = false;
+                        }
+                        map.body = arrs[j];
+                        q_arrs.push(map);
+                    }
+                    questions[i].q_arr = q_arrs;
+                }
+                questions.sort(function (a, b) {
+                    return a.questionUpdateTime - b.questionUpdateTime;
+                });
+                this.setState({
+                    isLoading: true,
+                    hasMore: false,
+                    issue: questions,
+                });
+            } else {
+                Toast.info(resp.info, 1);
+            }
+        })
     }
 
     topIssue = () => {
@@ -60,12 +82,13 @@ export default class TopList extends React.Component {
             pathname: "/room/topListPage"
         })
     };
-    addIssue = () =>{
+    addIssue = () => {
         // console.log("addIssue");
         this.props.history.push({
             pathname: "/room/addIssue"
         })
     };
+
     render() {
         return (
             <div className="topList">
@@ -75,7 +98,8 @@ export default class TopList extends React.Component {
                         <h4>今日答疑计划</h4>
                         <p><Icon type="check"></Icon> 坐阵科目：<span>会计</span></p>
                         <p><Icon type="check"></Icon> 坐阵时间：<span>16:00～16:30</span></p>
-                        <Button type="warning" inline className="issue_btn" onClick={() => this.addIssue()}>我要提问</Button>
+                        <Button type="warning" inline className="issue_btn"
+                                onClick={() => this.addIssue()}>我要提问</Button>
                         <WhiteSpace size="lg"/>
                     </div>
                     <WhiteSpace size="lg"/>
@@ -88,26 +112,37 @@ export default class TopList extends React.Component {
                     </Flex>
                     <WhiteSpace size="lg"/>
                     {/*<IssueList />*/}
-                    {this.state.data.map(i => (
-                        <div className="top_list" key={i.id}>
+                    {this.state.issue.map(obj => (
+                        <div className="top_list" key={obj.id}>
                             <WhiteSpace size="lg"/>
                             <div className="title">
-                                <img src="" alt=""/>
+                                {/*<img src="" alt=""/>*/}
                                 <div className="title_right">
-                                    <div className="nickname">nickname</div>
-                                    <div className="time">time <i>审计</i> <span className="status">等待处理</span></div>
+                                    <div className="nickname">{obj.user}</div>
+                                    <div className="time">{obj.time}<i>{obj.subject}</i>
+                                        {obj.answerBody ? '' :
+                                            <span className="status">等待处理</span>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                             <WhiteSpace size="lg"/>
                             <div className="body">
-                                老师，我想问一下，当集团的会计在给整个集团编报表的时候，需要考虑税费吗？还要去税务局交税吗？谢谢老师
+                                {obj.q_arr.map((item, index) => (
+                                    item.img ?
+                                        <img src={item.body} alt="" key={item.body}/> :
+                                        <div key={item.body}>{item.body}</div>
+                                ))}
                             </div>
                             <WhiteSpace size="lg"/>
-                            {/*<div className="answer">*/}
-                            {/*<span>老师：</span>*/}
-                            {/*同学，你好！不需要！考虑递延的就好！*/}
-                            {/*</div>*/}
-                            {/*<WhiteSpace size="lg"/>*/}
+                            {obj.answerBody ?
+                                <div className="answer">
+                                    <span>老师：</span>
+                                    {obj.answerBody}
+                                    <WhiteSpace size="lg"/>
+                                </div>
+
+                                : ''}
                             <div className="line"></div>
                         </div>
                     ))}

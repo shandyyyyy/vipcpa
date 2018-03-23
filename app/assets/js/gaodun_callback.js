@@ -1,31 +1,9 @@
-// var gaodun_callback = {
-//     id: 1,
-//     m: {},
-//     callback: function (id, s) {
-//         var gd_cb = gaodun_callback;
-//         if (!gd_cb.m[gd_cb.id]) {
-//             return;
-//         }
-//         var f = gd_cb.m[gd_cb.id];
-//         if (typeof f !== "function") {
-//             return;
-//         }
-//
-//         var obj = JSON.parse(s);
-//         f(obj);
-//     },
-//     invoke: function (type, url, cb) {
-//         var gd_cb = gaodun_callback;
-//
-//         gd_cb.m[gd_cb.id] = cb;
-//
-//         window.gaodun_app.postMessage(type, id, url);
-//
-//         gd_cb.id++;
-//     }
-// };
-// window.gaodun_callback = gaodun_callback;
-// gaodun_callback.callback(type, id, responseBody);
+const type = [{
+    type: 1, name: 'post'
+}, {type: 2, name: 'get'}, {type: 3, name: '播放视频'}, {type: 4, name: '下载视频'}, {type: 50, name: 'group Data'}, {
+    type: 60,
+    name: 'class Data'
+}, {type: 70, name: 'meeting Data'}, {type: 80, name: 'userInfo Data'}];
 
 var gaodun_callback = gaodun_callback || {
     Config: {
@@ -670,7 +648,6 @@ var gaodun_callback = gaodun_callback || {
                 // 	}
                 // }
             };
-            console.log(instance.q);
             var startToWork = function () {
                 if (instance.q.length === 0) {
                     return;
@@ -856,14 +833,24 @@ var gaodun_callback = gaodun_callback || {
                         gaodun_callback.Data.me.role = "STUDENT";
                         gaodun_callback.Data.me = resp.result;
                         gaodun_callback.Sender.setID(resp.result.id);
-                        onCallback(resp);
-                        // gaodun_callback.queryClass(
-                        // 	function (resp) {
-                        // 		if (gaodun_callback.isFunction(onCallback)) {
-                        // 			onCallback(resp);
-                        // 		}
-                        // 	}
-                        // );
+                        // onCallback(resp);
+                        gaodun_callback.Class.query(
+                            function (resp) {
+                                if(resp.status === 0){
+                                    var classList = resp.result.classList;
+                                    classList.forEach(item=>{
+                                        if(item.platformID === 6){
+                                            gaodun_callback.Data.roomID = item.id;
+                                            gaodun_callback.Data.notice = item.notice.split('\n');
+                                            gaodun_callback.Methods.saveData();
+                                        }
+                                    });
+                                    onCallback(resp);
+                                }else{
+                                   console.log('error');
+                                }
+                            }
+                        );
                     }
                 },
                 onError
@@ -995,7 +982,14 @@ var gaodun_callback = gaodun_callback || {
                 onCallback
             );
         },
-        //查询预约
+        //查询预约列表
+        getHistoryBooking: function (groupID, onCallback) {
+            gaodun_callback.Sender.newInvocation(
+                "/booking/history/get?group=" + groupID,
+                onCallback
+            );
+        },
+        //查询预约时间
         getBooking: function (groupID, subject, onCallback) {
             gaodun_callback.Sender.newInvocation(
                 "/booking/get?subject=" + subject + "&group=" + groupID,
@@ -1006,6 +1000,20 @@ var gaodun_callback = gaodun_callback || {
         setBooking: function (groupID, subject, date, startTime, phone, question, onCallback) {
             gaodun_callback.Sender.newInvocation(
                 "/booking/set?subject=" + subject + "&group=" + groupID + "&date=" + date + "&startTime=" + startTime + "&phone=" + encodeURIComponent(phone) + "&question=" + encodeURIComponent(question),
+                onCallback
+            );
+        },
+        //取消预约
+        cancelBooking: function (groupID, subject, date, startTime, onCallback) {
+            gaodun_callback.Sender.newInvocation(
+                "/booking/cancel?group=" + groupID + "&subject=" + subject + "&date=" + date + "&startTime=" + startTime,
+                onCallback
+            );
+        },
+        //评价预约
+        feedbackBooking: function (groupID, date, score, feedback, onCallback) {
+            gaodun_callback.Sender.newInvocation(
+                "/booking/feedback/set?group=" + groupID + "&date=" + date + "&score=" + score + "&feedback=" + encodeURIComponent(feedback),
                 onCallback
             );
         },
@@ -1067,7 +1075,7 @@ var gaodun_callback = gaodun_callback || {
             question = encodeURIComponent(question);
             gaodun_callback.Sender.newInvocation(
                 "/class/issue/ask?class=" + classID + "&meeting=" + meetingID + "&type=" + type + "&key=" + key + "&subKey=" +
-                subkey + "&question=" + question,
+                subkey + "&question=" + encodeURIComponent(question),
                 onCallback
             );
         },

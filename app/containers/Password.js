@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Button, List, InputItem, NavBar, Icon, WhiteSpace, WingBlank} from 'antd-mobile';
+import antdMobile from 'antd-mobile';
+const {Button, List, InputItem, NavBar, Icon, WhiteSpace, WingBlank} = antdMobile;
 import '../assets/css/base.less';
 import '../assets/css/login.less';
 // import {Hash} from '../assets/js/hash';

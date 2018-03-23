@@ -11,7 +11,7 @@ module.exports = {
   entry: {
     index: './app/client.js',
     vendor: [
-      'react', 'classnames', 'react-router', 'react-dom',
+      'react', 'react-router', 'react-dom',
     ],
   },
   output: {
@@ -61,6 +61,12 @@ module.exports = {
       }
     ]
   },
+    externals: {
+        'react': 'window.React',
+        'react-dom': 'window.ReactDOM',
+        //'react-router-dom': /Router?$/,
+        'antd-mobile':'antdMobile'
+    },
   plugins: [
     // 清除dist文件夹
     new CleanWebpackPlugin(['dist']),
@@ -74,6 +80,7 @@ module.exports = {
     // 根据入口文件，提取重复引用的公共代码类库，打包到单独文件中
     //new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
+      chunks: ['vendor','index'],
       name: 'vendor.[hash]', // 入口文件名
       filename: 'vendor.[hash].bundle.js', // 打包后的文件名
     }),
@@ -81,7 +88,7 @@ module.exports = {
     // new webpack.optimize.OccurrenceOrderPlugin(),
     /* 压缩优化代码开始  可以关掉*/
     new webpack.optimize.UglifyJsPlugin({
-      minimize: true
+      minimize: true,
     }),
     /* 压缩优化代码结束*/
     new HtmlWebpackPlugin({
@@ -90,7 +97,8 @@ module.exports = {
     }),
     // 分析代码
     // new BundleAnalyzerPlugin({ analyzerPort: 8188 }),
-  ],
+  ]
+
 }
 
 //fs.copy('./app/assets/images', './dist/images')

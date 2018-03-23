@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
+import moment from 'moment';
+import antdMobile from 'antd-mobile';
+const {
     WingBlank,
     WhiteSpace,
     Icon,
@@ -8,23 +10,21 @@ import {
     Flex,
     Calendar,
     Button
-} from 'antd-mobile';
+} = antdMobile;
 import enUS from 'antd-mobile/lib/calendar/locale/en_US';
 import zhCN from 'antd-mobile/lib/calendar/locale/zh_CN';
 
 import '../../assets/css/base.less';
 import '../../assets/css/course.less';
 
-const extra = {
-    '2017/07/15': {info: 'Disable', disable: true},
-};
+const extra = {};
 
 const now = new Date();
 extra[+new Date(now.getFullYear(), now.getMonth(), now.getDate() + 5)] = {info: 'Disable', disable: true};
-extra[+new Date(now.getFullYear(), now.getMonth(), now.getDate() + 6)] = {info: 'Disable', disable: true};
+extra[+new Date(now.getFullYear(), now.getMonth(), now.getDate() + 6)] = {info: 'live'};
 extra[+new Date(now.getFullYear(), now.getMonth(), now.getDate() + 7)] = {info: 'Disable', disable: true};
 extra[+new Date(now.getFullYear(), now.getMonth(), now.getDate() + 8)] = {info: 'Disable', disable: true};
-
+// console.log(extra);
 Object.keys(extra).forEach((key) => {
     const info = extra[key];
     const date = new Date(key);
@@ -34,8 +34,6 @@ Object.keys(extra).forEach((key) => {
 });
 
 export default class PpLive extends React.Component {
-    originbodyScrollY = document.getElementsByTagName('body')[0].style.overflowY;
-
     constructor(props) {
         super(props);
         this.state = {
@@ -54,7 +52,6 @@ export default class PpLive extends React.Component {
     componentDidMount() {
 
     }
-
     getDateExtra = date => extra[+date];
 
     render() {
@@ -62,15 +59,15 @@ export default class PpLive extends React.Component {
             <WingBlank>
                 <WhiteSpace size='lg'/>
                 <WhiteSpace size='lg'/>
+
                 <Calendar
                     {...this.state.config}
                     visible={this.state.show}
                     onCancel={this.onCancel}
                     onConfirm={this.onConfirm}
-                    onSelectHasDisableDate={this.onSelectHasDisableDate}
                     getDateExtra={this.getDateExtra}
-                    defaultDate={now}
-                    pickTime = {true}
+                    defaultDate={new Date()}
+                    defaultValue={ [new Date(), new Date()] }
                     type='one'
                     renderHeader={() => ''}
                     minDate={new Date(+now - 5184000000)}

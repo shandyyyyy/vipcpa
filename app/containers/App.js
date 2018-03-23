@@ -4,21 +4,22 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import '../assets/css/base.less';
 import '../assets/css/font.less';
 import '../assets/css/common.less';
-import NotFound from './NotFound';
 import Login from './Login';
 import Register from './Register';
 import Password from './Password';
 import Index from './index';
-// import Room from '../components/room';
 import TopListPage from './TopListPage';
 import AddIssue from './AddIssue';
 import Meeting from './meeting';
 import Order from '../components/me/order';
 import Note from '../components/me/note';
 import Issue from '../components/me/issue';
-
+import Interaction from '../components/room/interaction';
+import Judge from '../components/me/judge';
+import ErrorGather from '../components/me/errorGather';
 // import '../assets/js/global';
 import '../assets/js/gaodun_callback';
+import ErrorModal from "../components/me/errorGather/exercise";
 
 var ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 export default class App extends Component {
@@ -45,11 +46,14 @@ export default class App extends Component {
                                 {/*<Route path="/room" component={Room} />*/}
                                 <Route path="/room/addIssue" component={AddIssue} />
 								<Route path="/room/topListPage" component={TopListPage} />
+								<Route path="/room/interaction" component={Interaction} />
                                 <Route path="/course/meeting" component={Meeting} />
                                 <Route path="/me/order" component={Order} />
                                 <Route path="/me/note" component={Note} />
                                 <Route path="/me/issue" component={Issue} />
-                                <Route  path="/404" component={NotFound} />
+                                <Route path="/me/judge" component={Judge} />
+                                <Route path="/me/errorGather" component={ErrorGather} />
+                                <Route path="/me/errorModal" component={ErrorModal} />
                             </Switch>
                     )
                 }}>

@@ -1,13 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {
+import antdMobile from 'antd-mobile';
+const {
     WingBlank,
     WhiteSpace,
     Icon,
     List,
     Modal,
     Flex
-} from 'antd-mobile';
+} = antdMobile;
 import '../../assets/css/base.less';
 import '../../assets/css/report.less';
 import ReportModal from './modal';
@@ -19,7 +20,7 @@ export default class Report extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            pageHeight: document.documentElement.clientHeight - 20,
+            pageHeight: document.documentElement.clientHeight - 40,
             modal: false,
             title: "英雄榜",
             data: [

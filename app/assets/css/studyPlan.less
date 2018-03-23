@@ -1,55 +1,66 @@
 @import "common";
 
-.studyPlan{
-  .title{
+.studyPlan {
+  .title {
     line-height: 50px;
-    .left{
+    .left {
       text-align: left;
       font-size: 24px;
     }
-    .right{
+    .right {
       text-align: right;
       line-height: 18px;
       flex: none;
-      p{
+      p {
         font-size: 13px;
         color: #ccc;
         margin: 0;
       }
-      .time{
+      .time {
         font-size: 15px;
         color: @fontColor;
       }
-      span{
+      span {
         color: @fontColor;
         font-size: 16px;
       }
     }
   }
-  section{
-    padding: 50px 21px;
+  section {
+    display: flex;
+    align-content: center;
+    padding: 40px 21px;
     background-color: @blueColor;
     color: #fff;
+    line-height:20px;
+    :global{
+      .slider-slide{
+        display: flex !important;
+        align-content: center;
+        max-height: 80px;
+        overflow: auto;
+      }
+    }
   }
-  .startPlan{
+  .startPlan {
     font-size: 15px;
   }
-  .today_date{
-    .my_arrow,.my_ellipsis{
+  .today_date {
+    .my_arrow, .my_ellipsis {
       flex: none;
       color: @redColor;
     }
-    .my_ellipsis{
-      .am-icon{
+    .my_ellipsis {
+      .am-icon {
         margin-left: 10px;
       }
     }
-    p{
+    p {
       font-size: 15px;
       line-height: 20px;
       color: #333;
     }
-    .point i{
+    .point i {
       display: inline-block;
       width: 3px;
       height: 3px;
@@ -59,9 +70,15 @@
       margin: 0 5px;
     }
   }
-  .list_play{
-    .my_checkbox{
+  .list_play {
+    .my_checkbox {
       flex: none;
+      .am-checkbox-checked{
+        .am-checkbox-inner{
+          background-color: @greenColor;
+          border-color: @greenColor;
+        }
+      }
     }
   }
   :global {
@@ -70,21 +87,22 @@
     }
   }
 }
-.modal_content{
+
+.modal_content {
   border-radius: 10px 10px 0 0;
   color: #fff;
-  &>div{
+  & > div {
     padding: 0 15px;
     background-color: @blueColor;
   }
-  .modal_title{
+  .modal_title {
     text-align: center;
     font-size: 18px;
     color: #fff;
     position: relative;
     line-height: 30px;
     padding-top: 20px;
-    &::before{
+    &::before {
       content: '';
       position: absolute;
       left: 50%;
@@ -97,25 +115,25 @@
       background-color: #fff;
     }
   }
-  h3{
+  h3 {
     font-size: 16px;
     font-weight: normal;
     line-height: 25px;
     text-align: center;
     padding: 0 26px;
   }
-  .am-button{
+  .am-button {
     color: @blueColor;
   }
-  .info{
+  .info {
     background-color: #fff;
-    h4{
+    h4 {
       line-height: 70px;
       color: @blueColor;
       font-size: 18px;
       margin: 0;
     }
-    p{
+    p {
       color: #353535;
       font-size: 15px;
       line-height: 20px;
@@ -123,29 +141,35 @@
     }
   }
 }
+
 .studyPlan_modal .am-modal-content {
   background-color: transparent !important;
 }
-.am-modal-transparent .am-modal-content{
+
+.am-modal-transparent .am-modal-content {
   padding-top: 25px;
 }
-.am-modal-title{
+
+.am-modal-title {
   color: #ffb502;
   font-size: 22px;
 }
-.am-modal-alert-content{
+
+.am-modal-alert-content {
   font-size: 22px;
   color: #484848;
-  p{
+  p {
     font-size: 16px;
     margin: 20px 0 !important;
   }
 }
-.am-modal-button-group-h.am-modal-button-group-normal{
+
+.am-modal-button-group-h.am-modal-button-group-normal {
   display: block;
-  .am-modal-button{
+  .am-modal-button {
     display: block;
     color: @blueColor;
     border-bottom: 1px solid #eee;
+    font-size: 16px;
   }
 }

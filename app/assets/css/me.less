@@ -1,4 +1,4 @@
-@width: ~'calc(100% - 50px)';
+@width: ~'calc(100% - 70px)';
 .me_box {
   color: #484848;
   .header {
@@ -36,6 +36,9 @@
 .me_list {
   .am-flexbox.am-flexbox-align-center {
     border-bottom: 1px solid #eee;
+    &:last-child{
+      border-bottom: none;
+    }
   }
   .am-list-item {
     padding-left: 0;
@@ -48,12 +51,6 @@
 }
 
 .order {
-  .am-navbar {
-    background-color: #fff;
-    .am-navbar-left {
-      color: #484848;
-    }
-  }
   .am-tabs-default-bar {
     box-shadow: none !important;
   }
@@ -140,7 +137,7 @@
     background-color: #008489;
     padding: 10px;
     > p {
-      line-height: 25px;
+      line-height: 30px;
       font-size: 14px;
       color: #fff;
     }
@@ -153,6 +150,12 @@
       .status {
         color: #008489;
         text-align: right;
+      }
+    }
+    &.unfinished{
+      background-color:#f2f5f8;
+      >p{
+        color: #484848;
       }
     }
   }
@@ -171,4 +174,30 @@
 
 .top_list:last-child {
   border-bottom: none;
+}
+//评价
+.rate{
+  padding:20px 0;
+  >span{
+    vertical-align: top;
+    display: inline-block;
+    line-height: 30px;
+  }
+  img{
+    margin:0 5px;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+  }
+  textarea{
+    border: 1px solid #ddd;
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    line-height: 20px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
 }

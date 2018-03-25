@@ -13,7 +13,8 @@ export default class Index extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			selectedTab: 'studyPlan'
+			selectedTab: 'studyPlan',
+			app: gaodun_callback.Config.app
 		};
 	}
 
@@ -43,6 +44,7 @@ export default class Index extends React.Component {
 					unselectedTintColor="#949494"
 					tintColor="#ea3e3f"
 					barTintColor="white"
+					hidden={this.state.app}
 				>
 					<TabBar.Item
 						title="学习计划"

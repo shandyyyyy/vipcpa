@@ -36,7 +36,11 @@ export default class TopListPage extends React.Component {
             dataSource,
             isLoading: true,
             issue: [],
-            height: document.documentElement.clientHeight * 3 / 4,
+            userID: gaodun_callback.Data.me.id,
+
+            size: this.props.size||0,
+            app: gaodun_callback.Config.app,
+            height: document.documentElement.clientHeight - (gaodun_callback.Config.app?0:45),
         };
     }
 
@@ -44,47 +48,10 @@ export default class TopListPage extends React.Component {
         // you can scroll to the specified position
         // setTimeout(() => this.lv.scrollTo(0, 120), 800);
         this.getIssue();
-        // const hei = document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).parentNode.offsetTop;
-        // // simulate initial Ajax
-        // setTimeout(() => {
-        //     this.rData = data;
-        //     this.setState({
-        //         dataSource: this.state.dataSource.cloneWithRows(data),
-        //         isLoading: false,
-        //         height: hei,
-        //     });
-        // }, 600);
     }
-
-    // If you use redux, the data maybe at props, you need use `componentWillReceiveProps`
-    // componentWillReceiveProps(nextProps) {
-    //   if (nextProps.dataSource !== this.props.dataSource) {
-    //     this.setState({
-    //       dataSource: this.state.dataSource.cloneWithRowsAndSections(nextProps.dataSource),
-    //     });
-    //   }
-    // }
-
-    onEndReached = (event) => {
-        // load new data
-        // hasMore: from backend data, indicates whether it is the last page, here is false
-        if (this.state.isLoading && !this.state.hasMore) {
-            return;
-        }
-        console.log('reach end', event);
-        this.setState({isLoading: true});
-
-        setTimeout(() => {
-            this.rData = data.concat(data);
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(this.rData),
-                isLoading: false,
-            });
-        }, 1000);
-    };
-
     getIssue() {
         let roomID = gaodun_callback.Data.roomID;
+        const {size} = this.state;
         gaodun_callback.Class.issueGet(roomID, (resp) => {
             if (resp.status === 0) {
                 let questions = [];
@@ -95,7 +62,7 @@ export default class TopListPage extends React.Component {
                 for (let i = 0; i < questions.length; i++) {
                     questions[i].time = gaodun_callback.Methods.formatTime(new Date(questions[i].questionUpdateTime));
                     questions[i].subKeyStr = gaodun_callback.Methods.formatTime(new Date(questions[i].subKey * 1000));
-                    questions[i].user = (questions[i].questionUpdater === parseInt(this.state.userID)) ? "我的提问" : "来自高顿同学的提问";
+                    questions[i].user = (questions[i].questionUpdater === parseInt(this.state.userID)) ? "我" : "来自高顿同学";
                     questions[i].subject = gaodun_callback.Data.subjectMap[questions[i].subKey];
                     //数组
                     let body = decodeURIComponent(questions[i].questionBody);
@@ -114,13 +81,14 @@ export default class TopListPage extends React.Component {
                     questions[i].q_arr = q_arrs;
                 }
                 questions.sort(function (a, b) {
-                    return a.questionUpdateTime - b.questionUpdateTime;
+                    return b.questionUpdateTime - a.questionUpdateTime;
                 });
+
                 this.setState({
-                    isLoading: true,
+                    isLoading: false,
                     dataSource: this.state.dataSource.cloneWithRows(questions),
                     hasMore: false,
-                    issue: questions,
+                    issue: size?(questions.length>size?questions.slice(0,size):questions):questions,
                 });
             } else {
                 Toast.info(resp.info, 1);
@@ -128,25 +96,38 @@ export default class TopListPage extends React.Component {
         })
     }
 
+    onEndReached = (event) => {
+        // load new data
+        // hasMore: from backend data, indicates whether it is the last page, here is false
+        if (!this.state.isLoading && !this.state.hasMore) {
+            return;
+        }
+        console.log('reach end', event);
+        this.setState({isLoading: true});
+
+        setTimeout(() => {
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(this.state.issue),
+                isLoading: false,
+            });
+        }, 1000);
+    };
+
+
     onLeftClick = () => {
         this.props.history.push('/index/room');
     };
 
     render() {
-        const {issue} = this.state;
-        let index = 0;
-        const row = () => {
-            if (issue.length === 0) {
-                console.log("数组长度为0");
-            }
-            const obj = issue[index++];
-            // console.log(obj);
+        const {issue, size} = this.state;
+
+        const row = (obj) => {
             return (
                 <div key={obj.id} className="top_list">
                     <WhiteSpace/>
                     <div className="title">
                         <div className="title_right">
-                            <div className="nickname">我</div>
+                            <div className="nickname">{obj.user}</div>
                             <div className="time">{obj.time}<i>{obj.subject}</i>
                                 {obj.answerBody ? '' :
                                     <span className="status">等待处理</span>
@@ -175,40 +156,27 @@ export default class TopListPage extends React.Component {
                 </div>
             );
         };
+
         return (
             <div className="room">
-                <NavBar
-                    mode="dark"
-                    className="navbar"
-                    leftContent={<Icon type="cross"></Icon>}
-                    onLeftClick={this.onLeftClick}>
-                    精华列表
-                </NavBar>
-                <div className="topList_box">
-                </div>
-                <ListView
-                    ref={el => this.lv = el}
-                    dataSource={this.state.dataSource}
-                    // renderHeader={() => <span>header</span>}
-                    renderFooter={() => (<div style={{padding: 30, textAlign: 'center'}}>
-                        {this.state.isLoading ? 'Loading...' : 'Loaded'}
-                    </div>)}
-                    renderBodyComponent={() => <MyBody/>}
-                    renderRow={row}
-                    style={{
-                        height: this.state.height,
-                        overflow: 'auto',
-                    }}
-                    pageSize={4}
-                    onScroll={() => {
-                        console.log('scroll');
-                    }}
-                    scrollRenderAheadDistance={50}
-                    onEndReached={this.onEndReached}
-                    onEndReachedThreshold={20}
-                />
+                {size?'':
+                    <div>
+                        <NavBar
+                        mode="dark"
+                        className="navbar"
+                        leftContent={<Icon type="cross"></Icon>}
+                        onLeftClick={this.onLeftClick}>
+                        精华列表
+                        </NavBar>
+                        <div className={this.state.app?'':'show_navbar'}></div>
+                    </div>
+                }
+                <WingBlank>
+                    {issue.map(obj=>(
+                        row(obj)
+                    ))}
+                </WingBlank>
             </div>
-
         );
     }
 }

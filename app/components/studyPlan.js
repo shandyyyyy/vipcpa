@@ -47,7 +47,7 @@ export default class StudyPlan extends React.Component {
             todayShow: true, //显示今天任务
             currentDay: new Date().getMonth() + 1 + '月' + new Date().getDate() + '日', //当前查询日期
             modal: false,
-            pageHeight: document.documentElement.clientHeight - 50,
+            pageHeight: document.documentElement.clientHeight - (gaodun_callback.Config.app?0:50),
             studyObj: {
                 modal: 'free',
                 time: 0
@@ -84,7 +84,7 @@ export default class StudyPlan extends React.Component {
     }
 
     componentWillMount() {
-        const {studyStatus} = this.state;
+
         let studyTimeObj = JSON.parse(localStorage.getItem('studyTime'));
         let count = parseInt(localStorage.getItem('count'));
         if (studyTimeObj !== null) {
@@ -161,9 +161,7 @@ export default class StudyPlan extends React.Component {
         }, 1000, this);
 
         const my_alert = (that) => {
-            console.log(1);
             let time = ++studyObj.time;
-
             if (key === 'tomato' && time >= 5 * count) {
                 clearInterval(that.state.setIntervalTime);
                 alert('太棒了', <div>已收获一个番茄<p>是否继续休息下继续学习</p></div>, [
@@ -179,7 +177,7 @@ export default class StudyPlan extends React.Component {
                             that.setState({
                                 count: count
                             });
-                            that.state.setIntervalTime = setInterval(function (that) {
+                        that.state.setIntervalTime = setInterval(function (that) {
                                 my_alert(that);
                             }, 1000, that);
                         }
@@ -195,9 +193,7 @@ export default class StudyPlan extends React.Component {
             let a = {
                 modal: key,
                 time: time
-            }
-            console.log(a);
-            console.log(that)
+            };
             that.setState({
                 studyObj: a,
                 time: time

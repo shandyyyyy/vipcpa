@@ -2,12 +2,10 @@ import React from 'react';
 import antdMobile from 'antd-mobile';
 
 const {
-    WingBlank,
-    WhiteSpace,
-    List,
     Icon,
     Toast,
     Picker,
+    List,
     InputItem
 } = antdMobile;
 import '../../assets/css/base.less';

@@ -59,7 +59,7 @@ export default class Course extends React.Component {
 
     componentDidMount() {
         this.setState({
-            pageHeight: document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).offsetTop - 44 - 50,
+            pageHeight: document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).offsetTop - 45 - (gaodun_callback.Config.app?0:50),
         })
     }
     changeTab(index){

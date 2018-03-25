@@ -4,7 +4,8 @@ import antdMobile from 'antd-mobile';
 
 const {
     Toast,
-    Modal
+    Modal,
+    ActivityIndicator
 } = antdMobile;
 import '../../assets/css/base.less';
 import '../../assets/css/room.less';
@@ -40,7 +41,8 @@ export default class OrderList extends React.Component {
                     item.status = (item.date + item.startTime + item.duration) * 1000 > new Date().getTime() ? 'unfinished' : 'finished';
                 });
                 this.setState({
-                    historyBooking: record
+                    historyBooking: record,
+                    loading: false
                 })
             } else {
                 Toast.info('获取预约列表错误', 1);
@@ -53,6 +55,7 @@ export default class OrderList extends React.Component {
     }
 
     handleClick = (item) => {
+        const {historyBooking} = this.state;
         if (item.status === 'finished' && item.score === -1) {
             console.log('评价');
             this.props.history.push({
@@ -67,9 +70,9 @@ export default class OrderList extends React.Component {
             let startTime = item.startTime;
             gaodun_callback.Group.cancelBooking(this.state.groupID, subjectID, date, startTime, (resp) => {
                 if (resp.status === 0) {
-                    this.state.historyBooking.splice(this.state.historyBooking.findIndex(arr => arr.date === item.date), 1);
+                    historyBooking.splice(historyBooking.findIndex(arr => arr.date === item.date), 1);
                     this.setState({
-                        historyBooking: this.state.historyBooking
+                        historyBooking: historyBooking
                     })
                 } else {
                     Toast.fail('取消预约失败', 1);
@@ -78,9 +81,10 @@ export default class OrderList extends React.Component {
         }
     }
     render() {
+        const {historyBooking,loading} = this.state;
         return (
             <div className='orderList'>
-                {this.state.historyBooking.map((item, index) => (
+                {historyBooking.map((item, index) => (
                     <section className={item.status === 'finished' ? 'card finished' : 'card unfinished'}>
                         <p>{item.status === 'finished' ? (item.score === -1 ? '已结束，等待评价' : '已评价') : '等待辅导，请保持电话畅通'}</p>
                         <div className='info'>
@@ -90,6 +94,14 @@ export default class OrderList extends React.Component {
                         </div>
                     </section>
                 ))}
+                <div className="loading-example">
+                    <div className="align">
+                        <ActivityIndicator size="large" animating={loading}/>
+                        {historyBooking.length>0?'':
+                            <div >暂无数据</div>
+                        }
+                    </div>
+                </div>
             </div>
         );
     }

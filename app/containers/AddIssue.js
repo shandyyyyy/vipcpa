@@ -20,6 +20,8 @@ export default class AddIssue extends React.Component {
             value: '',
             subject: [],
             subjectIndex: 0,
+            app: gaodun_callback.Config.app,
+            roomID: gaodun_callback.Data.roomID
         };
     }
 
@@ -75,7 +77,7 @@ export default class AddIssue extends React.Component {
         else if (subjectIndex === 0) {
             Toast.info('请选择科目提交问题', 1);
         } else {
-            let classID = 2222;
+            let classID = this.state.roomID;
             let meetingID = 28703;
             let type= 5;
             let y = new Date().getFullYear();
@@ -98,20 +100,27 @@ export default class AddIssue extends React.Component {
     };
 
     render() {
+        const {app, subject, value} = this.state;
         return (
             <div className="addIssue">
-                <NavBar
-                    mode="dark"
-                    className="navbar"
-                    leftContent={<Icon type="cross"></Icon>}
-                    onLeftClick={this.onLeftClick}
-                    rightContent={<span onClick={() => this.askQuestion()} className="add">提交</span>}>
-                    提问
-                </NavBar>
+                {app?'':
+                    <div>
+                        <NavBar
+                            mode="dark"
+                            className="navbar"
+                            leftContent={<Icon type="cross"></Icon>}
+                            onLeftClick={this.onLeftClick}
+                            rightContent={<span onClick={() => this.askQuestion()} className="add">提交</span>}>
+                            提问
+                        </NavBar>
+                        <div className='show_navbar'></div>
+                    </div>
+                }
+
                 <WingBlank>
                     <WhiteSpace size="lg"/>
                     <div className="subject">
-                        {this.state.subject.map((item, index) => (
+                        {subject.map((item, index) => (
                             <Button type="ghost" inline size="small"
                                     className={item.active ? 'active button' : 'button'} key={item.id}
                                     onClick={() => this.chooseSubject(index)}>{item.name}</Button>
@@ -124,7 +133,7 @@ export default class AddIssue extends React.Component {
                         <textarea
                             rows={8}
                             placeholder="输入我的问题"
-                            value={this.state.value}
+                            value={value}
                             onChange={this.handleChange}
                         />
                     </div>

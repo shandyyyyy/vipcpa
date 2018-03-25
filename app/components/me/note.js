@@ -1,21 +1,16 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {Route} from 'react-router-dom';
 import antdMobile from 'antd-mobile';
 const {
     WingBlank,
     WhiteSpace,
-    Flex,
     NavBar,
     Icon,
-    Button,
     Toast,
     ActivityIndicator
 } = antdMobile;
 import '../../assets/css/base.less';
 import '../../assets/css/me.less';
-import IssueList from '../../components/issueList';
-
 
 export default class Note extends React.Component {
     constructor(props) {
@@ -42,43 +37,54 @@ export default class Note extends React.Component {
                         cpaClass.push(item);
                     }
                 });
-                this.setState({
-                    data: cpaClass
-                });
-                let arr = [];
-                this.state.data.forEach(item => {
-                    gaodun_callback.Class.getNote(item.id, (resp) => {
-                        if (resp.status === 0) {
-                            let list = resp.result.note;
+                if(cpaClass.length>0){
+                    this.setState({
+                        data: cpaClass
+                    },()=>{
+                        this.getNote();
+                    });
+                }else{
+                    Toast.info('暂无VIPCPA课程',1);
+                }
 
-                            list.forEach(list => {
-                                list.formatDate = gaodun_callback.Methods.formatTime(list.updateTime);
-                                arr.push(list);
-                            });
-                            arr = arr.sort(function (a, b) {
-                                return b.updateTime - a.updateTime;
-                            });
-                            this.setState({
-                                note: arr,
-                                loading: false
-                            })
-                            console.log(this.state);
-                        } else {
-                            Toast.info(resp.info, 1);
-                        }
-                    })
-                })
             } else {
                 Toast.fail("出错了", 1)
             }
         });
     }
+    getNote(){
+        const {data} = this.state;
+        let arr = [];
+        data.forEach((item, index) => {
+            gaodun_callback.Class.getNote(item.id, (resp) => {
+                if (resp.status === 0) {
+                    let list = resp.result.note;
 
+                    list.forEach(list => {
+                        list.formatDate = gaodun_callback.Methods.formatTime(list.updateTime);
+                        arr.push(list);
+                    });
+                    arr = arr.sort(function (a, b) {
+                        return b.updateTime - a.updateTime;
+                    });
+                    if(index === data.length-1){
+                        this.setState({
+                            note: arr,
+                            loading: false
+                        })
+                    }
+                } else {
+                    Toast.info(resp.info, 1);
+                }
+            })
+        })
+    }
     onLeftClick = () => {
         this.props.history.push('/index/me');
     };
 
     render() {
+        const {note} = this.state;
         return (
             <div className="note">
                 <NavBar
@@ -88,15 +94,18 @@ export default class Note extends React.Component {
                     onLeftClick={this.onLeftClick}>
                     我的笔记
                 </NavBar>
-                <div style={{height: '35px'}}></div>
+                <div style={{height: '45px'}}></div>
                 <div className="loading-example">
                     <div className="align">
                         <ActivityIndicator size="large" animating={this.state.loading}/>
+                        {note.length>0?'':
+                            <div >暂无数据</div>
+                        }
                     </div>
                 </div>
                 <WhiteSpace size="lg"/>
                 <WhiteSpace size="lg"/>
-                {this.state.note.map(item => (
+                {note.map(item => (
                     <div key={item.id} className="top_list">
                         <WingBlank>
                             <WhiteSpace size="lg"/>

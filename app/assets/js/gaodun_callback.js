@@ -1,9 +1,12 @@
 const type = [{
-    type: 1, name: 'post'
-}, {type: 2, name: 'get'}, {type: 3, name: '播放视频'}, {type: 4, name: '下载视频'}, {type: 50, name: 'group Data'}, {
-    type: 60,
-    name: 'class Data'
-}, {type: 70, name: 'meeting Data'}, {type: 80, name: 'userInfo Data'}];
+    type: 1, name: 'post'},
+    {type: 2, name: 'get'},
+    {type: 3, name: '播放视频'},
+    {type: 4, name: '下载视频'},
+    {type: 50, name: 'group Data'},
+    {type: 60, name: 'class Data'},
+    {type: 70, name: 'meeting Data'},
+    {type: 80, name: 'userInfo Data'}];
 
 var gaodun_callback = gaodun_callback || {
     Config: {
@@ -16,24 +19,24 @@ var gaodun_callback = gaodun_callback || {
         m: {},
     },
     callback: function (obj) {
-        // window.alert(JSON.stringify(obj));
-        // window.alert(obj.type, obj.id, obj.response);
 
         var gd_cb = gaodun_callback.Config;
         if (!gd_cb.m[obj.id]) {
-            window.alert(obj.id);
             return;
         }
         var f = gd_cb.m[obj.id];
         if (typeof f !== "function") {
-            window.alert(obj.id + '222');
             return;
         }
 
         f(obj.response);
     },
 };
-
+(function () {
+    if (window.gaodun_app && (typeof window.gaodun_app === "object") || (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.gaodun_app)) {
+        gaodun_callback.Config.app = true;
+    }
+})();
 // Common Methods.
 (function () {
     if ((gaodun_callback.Methods !== undefined) && (gaodun_callback.Methods !== null)) {
@@ -433,12 +436,6 @@ var gaodun_callback = gaodun_callback || {
     };
 })();
 
-(function () {
-    if (window.gaodun_app && (typeof window.gaodun_app === "object") || (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.gaodun_app)) {
-        gaodun_callback.Config.app = true;
-    }
-    // gaodun_callback.Methods.tips(gaodun_callback.Config.app)
-})();
 // Data.
 (function () {
     if (gaodun_callback.Methods.isValid(gaodun_callback.Data)) {
@@ -578,7 +575,17 @@ var gaodun_callback = gaodun_callback || {
                 } else {
                     console.log("!gaodun_app");
                     if (gd_cb.type !== 1) {
-                        return cb(gaodun_callback.Data.currentClass);
+                        switch (gd_cb.type){
+                            case 60:
+                                return cb(gaodun_callback.Data.currentClass);
+                            break;
+                            case 80:
+                                return cb(gaodun_callback.Data.me);
+                            default:
+                                break;
+
+                        }
+
                     }
                     instance.q.push({
                         json: true,
@@ -601,52 +608,16 @@ var gaodun_callback = gaodun_callback || {
                 localStorage.setItem("time", time);
             };
             instance.setID = function (id) {
-                // if (localStorage) {
                 localStorage.setItem("id", id);
-                // } else {
-                // 	var s = document.cookie;
-                // 	if (s.length === 0) {
-                // 		document.cookie = (id + "=");
-                // 	} else {
-                // 		document.cookie = (id + "=" + (s.split("="))[1]);
-                // 	}
-                // }
             };
             instance.getID = function () {
-                // if (localStorage) {
                 return localStorage.getItem("id");
-                // } else {
-                // 	var s = document.cookie;
-                // 	if (s.length === 0) {
-                // 		return "";
-                // 	} else {
-                // 		return (s.split("="))[0];
-                // 	}
-                // }
             };
             instance.setToken = function (token) {
-                // if (localStorage) {
                 localStorage.setItem("token", token);
-                // } else {
-                // 	var s = document.cookie;
-                // 	if (s.length === 0) {
-                // 		document.cookie = ("=" + token);
-                // 	} else {
-                // 		document.cookie = ((s.split("="))[0] + "=" + token);
-                // 	}
-                // }
             };
             instance.getToken = function () {
-                // if (localStorage) {
                 return localStorage.getItem("token");
-                // } else {
-                // 	var s = document.cookie;
-                // 	if (s.length === 0) {
-                // 		return "";
-                // 	} else {
-                // 		return (s.split("="))[1];
-                // 	}
-                // }
             };
             var startToWork = function () {
                 if (instance.q.length === 0) {
@@ -944,6 +915,7 @@ var gaodun_callback = gaodun_callback || {
 
     gaodun_callback.Group = {
         query: function (onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/user/group/query",
                 function (resp) {
@@ -961,12 +933,14 @@ var gaodun_callback = gaodun_callback || {
         },
         // 查询科目
         querySubject: function (onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/subject/query",
                 onCallback
             );
         },
         querySubjectForGroup: function (groupID, onCallback) {
+            gaodun_callback.Config.type = 1;
             var s = "/group/subject/query";
             if (groupID) {
                 s += "?group=" + groupID;
@@ -977,6 +951,7 @@ var gaodun_callback = gaodun_callback || {
         // 标签
         // 查询
         queryTag: function (groupID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/tag/query?group=" + groupID,
                 onCallback
@@ -984,6 +959,7 @@ var gaodun_callback = gaodun_callback || {
         },
         //查询预约列表
         getHistoryBooking: function (groupID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/booking/history/get?group=" + groupID,
                 onCallback
@@ -991,6 +967,7 @@ var gaodun_callback = gaodun_callback || {
         },
         //查询预约时间
         getBooking: function (groupID, subject, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/booking/get?subject=" + subject + "&group=" + groupID,
                 onCallback
@@ -998,6 +975,7 @@ var gaodun_callback = gaodun_callback || {
         },
         //增加预约
         setBooking: function (groupID, subject, date, startTime, phone, question, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/booking/set?subject=" + subject + "&group=" + groupID + "&date=" + date + "&startTime=" + startTime + "&phone=" + encodeURIComponent(phone) + "&question=" + encodeURIComponent(question),
                 onCallback
@@ -1005,6 +983,7 @@ var gaodun_callback = gaodun_callback || {
         },
         //取消预约
         cancelBooking: function (groupID, subject, date, startTime, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/booking/cancel?group=" + groupID + "&subject=" + subject + "&date=" + date + "&startTime=" + startTime,
                 onCallback
@@ -1012,6 +991,7 @@ var gaodun_callback = gaodun_callback || {
         },
         //评价预约
         feedbackBooking: function (groupID, date, score, feedback, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/booking/feedback/set?group=" + groupID + "&date=" + date + "&score=" + score + "&feedback=" + encodeURIComponent(feedback),
                 onCallback
@@ -1028,12 +1008,14 @@ var gaodun_callback = gaodun_callback || {
 
     gaodun_callback.Class = {
         getOneClass: function (classID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/class/get?class=" + classID,
                 onCallback
             );
         },
         query: function (onCallback, groupID) {
+            gaodun_callback.Config.type = 1;
             var params = "";
             if (gaodun_callback.Data.me.role === "SYSTEM") {
                 params += "?group=" + groupID;
@@ -1056,6 +1038,7 @@ var gaodun_callback = gaodun_callback || {
         },
         //获取班级笔记
         getNote: function (classID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/note/get?class=" + classID,
                 onCallback
@@ -1063,6 +1046,7 @@ var gaodun_callback = gaodun_callback || {
         },
         //记笔记
         sendNote: function (classID, meetingID, type, key, subkey, body, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/note/add?class=" + classID + "&meeting=" + meetingID + "&type=" + type +
                 "&key=" + key + "&subKey=" + subkey + "&body=" + encodeURIComponent(body),
@@ -1072,6 +1056,7 @@ var gaodun_callback = gaodun_callback || {
 
         //提问题
         askQuestion: function (classID, meetingID, type, key, subkey, question, onCallback) {
+            gaodun_callback.Config.type = 1;
             question = encodeURIComponent(question);
             gaodun_callback.Sender.newInvocation(
                 "/class/issue/ask?class=" + classID + "&meeting=" + meetingID + "&type=" + type + "&key=" + key + "&subKey=" +
@@ -1081,20 +1066,12 @@ var gaodun_callback = gaodun_callback || {
         },
         // 获取班级所有问题
         issueGet: function (classID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/class/issue/get?class=" + classID,
                 onCallback
             );
-        },
-
-        // 回答问题
-        answerIssue: function (classID, issueID, answer, onCallback) {
-            answer = encodeURIComponent(LZString.compressToBase64(answer));
-            gaodun_callback.Sender.newInvocation(
-                "/class/issue/answer?class=" + classID + "&issue=" + issueID + "&answer=" + answer,
-                onCallback
-            );
-        },
+        }
 
     };
 })();
@@ -1107,12 +1084,14 @@ var gaodun_callback = gaodun_callback || {
 
     gaodun_callback.Meeting = {
         getOneMeeting: function (meetingID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/meeting/get?meeting=" + meetingID,
                 onCallback
             );
         },
         queryByClass: function (classID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/class/meeting/query?class=" + classID,
                 onCallback
@@ -1132,18 +1111,21 @@ var gaodun_callback = gaodun_callback || {
             );
         },
         authorizeVideos: function (meetingID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/meeting/video/authorize?meeting=" + meetingID,
                 onCallback
             );
         },
         authorizeReplays: function (meetingID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/meeting/replay/authorize?meeting=" + meetingID,
                 onCallback
             );
         },
         resyncExam: function (meetingID, examID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/meeting/exam/resync?meeting=" + meetingID + "&exam=" + examID,
                 onCallback
@@ -1160,6 +1142,7 @@ var gaodun_callback = gaodun_callback || {
         },
         // 获取每节课某一试卷  所有学员的答案
         queryExamAnswer: function (meetingID, examID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/meeting/exam/answer/get?meeting=" + meetingID + "&exam=" + examID,
                 onCallback
@@ -1167,18 +1150,21 @@ var gaodun_callback = gaodun_callback || {
         },
 
         askForLeave: function (meetingID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/meeting/leave?meeting=" + meetingID + "&cancel=0",
                 onCallback
             );
         },
         cancelLeave: function (meetingID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/meeting/leave?meeting=" + meetingID + "&cancel=1",
                 onCallback
             );
         },
         join: function (meetingID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/meeting/join?meeting=" + meetingID,
                 onCallback
@@ -1186,6 +1172,7 @@ var gaodun_callback = gaodun_callback || {
         },
         // get feedback
         getFeedback: function (meetingID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/meeting/feedback/get?meeting=" + meetingID,
                 onCallback
@@ -1202,6 +1189,7 @@ var gaodun_callback = gaodun_callback || {
 
     gaodun_callback.Student = {
         queryByClass: function (classID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/class/student/query?class=" + classID,
                 function (resp) {
@@ -1233,36 +1221,42 @@ var gaodun_callback = gaodun_callback || {
 
     gaodun_callback.Progress = {
         queryByClassAndUser: function (classID, userID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/class/progress/query?class=" + classID + "&user=" + userID,
                 onCallback
             );
         },
         queryByMeeting: function (meetingID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/meeting/progress/query?meeting=" + meetingID,
                 onCallback
             );
         },
         queryMineByClass: function (classID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/class/progress/query?class=" + classID,
                 onCallback
             );
         },
         queryMineByMeeting: function (meetingID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/meeting/progress/query?meeting=" + meetingID,
                 onCallback
             );
         },
         finishCourseware: function (meetingID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/meeting/courseware/finish?meeting=" + meetingID,
                 onCallback
             );
         },
         finishVideo: function (meetingID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/meeting/video/finish?meeting=" + meetingID,
                 onCallback
@@ -1275,18 +1269,21 @@ var gaodun_callback = gaodun_callback || {
             );
         },
         authorizeExam: function (meetingID, examID, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/meeting/exam/authorize?meeting=" + meetingID + "&exam=" + examID,
                 onCallback
             );
         },
         answerExam: function (meetingID, examID, answer, onCallback) {
+            gaodun_callback.Config.type = 1;
             gaodun_callback.Sender.newInvocation(
                 "/meeting/exam/answer?meeting=" + meetingID + "&exam=" + examID + "&answer=" + answer,
                 onCallback
             );
         },
         summarizeProgressOfClass: function (classID, onCallback) {
+            gaodun_callback.Config.type = 1;
             // Get all meetings within this class.
             gaodun_callback.Meeting.queryByClass(
                 classID,
@@ -1394,13 +1391,20 @@ var gaodun_callback = gaodun_callback || {
 
     gaodun_callback.GetData = {
 
-        getClass: function (typeID, onCallback) {
-            gaodun_callback.Config.type = typeID;
+        getClass: function (onCallback) {
+            gaodun_callback.Config.type = 60;
             gaodun_callback.Sender.newInvocation(
-                "/?type=" + typeID,
+                "type",
                 onCallback
             );
-        }
+        },
+        UserInfo: function (onCallback) {
+            gaodun_callback.Config.type = 80;
+            gaodun_callback.Sender.newInvocation(
+                "type",
+                onCallback
+            );
+        },
     };
 })();
 // 播放视频

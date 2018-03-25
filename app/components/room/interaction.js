@@ -39,6 +39,12 @@ export default class Interaction extends React.Component {
     }
 
     componentDidMount = () => {
+        // window.addEventListener('keydown', (e)=>{
+        //     if(e && e.keyCode === 13){
+        //         this.chatSend();
+        //     }
+        // });
+
         // const {liveTime, nowTime, roomStatus} = this.state;
         // liveTime.forEach(item => {
         //     if (nowTime > item.startTime && nowTime < item.startTime + item.duration) {
@@ -86,6 +92,11 @@ export default class Interaction extends React.Component {
             })
         };
     };
+    componentWillUnmount(){
+        DWLive.logout(function (r) {
+            console.log(r);
+        })
+    }
     showEm = (str) => {
         if (!$.trim(str)) {
             return '';
@@ -159,7 +170,7 @@ export default class Interaction extends React.Component {
                     <div>
                         <div className='chat-content' ref='content' style={{maxHeight: this.state.pageHeight + 'px'}}>
                             {this.state.chat.map(item => (
-                                <div key={item.userid}
+                                <div key={item.time}
                                      className={`top_list chatMsg ${item.userrole} ${item.gliveid == this.state.id ? 'me' : ''}`}>
                                     <WingBlank style={{padding: '0 5px'}}>
                                         <div className="username">
@@ -183,47 +194,47 @@ export default class Interaction extends React.Component {
                                     <tbody>
                                     <tr>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/01.png"
-                                                 onTouchEnd={() => this.setEm('01')}/></td>
+                                                 onClick={() => this.setEm('01')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/02.png"
-                                                 onTouchEnd={() => this.setEm('02')}/></td>
+                                                 onClick={() => this.setEm('02')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/03.png"
-                                                 onTouchEnd={() => this.setEm('03')}/></td>
+                                                 onClick={() => this.setEm('03')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/04.png"
-                                                 onTouchEnd={() => this.setEm('04')}/></td>
+                                                 onClick={() => this.setEm('04')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/05.png"
-                                                 onTouchEnd={() => this.setEm('05')}/></td>
+                                                 onClick={() => this.setEm('05')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/06.png"
-                                                 onTouchEnd={() => this.setEm('06')}/></td>
+                                                 onClick={() => this.setEm('06')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/07.png"
-                                                 onTouchEnd={() => this.setEm('07')}/></td>
+                                                 onClick={() => this.setEm('07')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/08.png"
-                                                 onTouchEnd={() => this.setEm('08')}/></td>
+                                                 onClick={() => this.setEm('08')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/09.png"
-                                                 onTouchEnd={() => this.setEm('09')}/></td>
+                                                 onClick={() => this.setEm('09')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/10.png"
-                                                 onTouchEnd={() => this.setEm('10')}/></td>
+                                                 onClick={() => this.setEm('10')}/></td>
                                     </tr>
                                     <tr>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/11.png"
-                                                 onTouchEnd={() => this.setEm('11')}/></td>
+                                                 onClick={() => this.setEm('11')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/12.png"
-                                                 onTouchEnd={() => this.setEm('12')}/></td>
+                                                 onClick={() => this.setEm('12')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/13.png"
-                                                 onTouchEnd={() => this.setEm('13')}/></td>
+                                                 onClick={() => this.setEm('13')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/14.png"
-                                                 onTouchEnd={() => this.setEm('14')}/></td>
+                                                 onClick={() => this.setEm('14')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/15.png"
-                                                 onTouchEnd={() => this.setEm('15')}/></td>
+                                                 onClick={() => this.setEm('15')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/16.png"
-                                                 onTouchEnd={() => this.setEm('16')}/></td>
+                                                 onClick={() => this.setEm('16')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/17.png"
-                                                 onTouchEnd={() => this.setEm('17')}/></td>
+                                                 onClick={() => this.setEm('17')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/18.png"
-                                                 onTouchEnd={() => this.setEm('18')}/></td>
+                                                 onClick={() => this.setEm('18')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/19.png"
-                                                 onTouchEnd={() => this.setEm('19')}/></td>
+                                                 onClick={() => this.setEm('19')}/></td>
                                         <td><img src="//view.csslcloud.net/img/em2_mobile/20.png"
-                                                 onTouchEnd={() => this.setEm('20')}/></td>
+                                                 onClick={() => this.setEm('20')}/></td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -237,6 +248,7 @@ export default class Interaction extends React.Component {
                                 placeholder="请输入内容"
                                 value={this.state.message}
                                 onChange={this.handleMessage}
+                                onKeyDown={this.handleKeyDown}
                             >
                                 <img src="../../assets/images/img.png" alt="" className='showImg'
                                      onClick={() => this.showImg()}/>

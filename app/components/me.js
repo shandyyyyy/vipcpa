@@ -69,27 +69,22 @@ export default class Me extends React.Component {
                     thumb: '//zos.alipayobjects.com/rmsportal/UmbJMbWOejVOpxe.png'
                 }
 			],
-			height: document.documentElement.clientHeight - 50
+			height: document.documentElement.clientHeight - (gaodun_callback.Config.app?0:50)
 		};
 	}
 
 	componentWillMount() {
-
+		let nickname = '';
+		gaodun_callback.GetData.UserInfo(function (resp) {
+			nickname = resp.nickname;
+		});
+		this.setState({
+			nickname: nickname
+		})
 	}
 	componentDidMount() {
 
 	}
-	onChange = (i) => {
-		this.state.data.forEach((item) => {
-			if (item.id === i.id) {
-				item.finished = !i.finished;
-				item.extra = !i.extra;
-			}
-		});
-		this.setState({
-			data: this.state.data
-		})
-	};
 	handleClick = (i) => {
 		let type = i.type;
 		if(type === 'order'){
@@ -103,13 +98,14 @@ export default class Me extends React.Component {
         })
 	};
 	render() {
+		const {nickname} = this.state;
 		return (
 			<div className="me_box" style={{height: this.state.height+'px',overflow:'auto'}}>
 				<WingBlank>
 					<WhiteSpace size="lg"/>
 					<div className='header'>
 						<div className='info'>
-							<div>曹勇</div>
+							<div>{nickname}</div>
 							<span>查看并编辑个人资料</span>
 						</div>
                         <img src="//zos.alipayobjects.com/rmsportal/UmbJMbWOejVOpxe.png" alt=""/>

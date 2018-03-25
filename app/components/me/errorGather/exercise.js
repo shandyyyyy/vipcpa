@@ -31,10 +31,13 @@ export default class ErrorModal extends React.Component {
         //     return;
         // }
         let choice = [];
-        if (question.type !== 5) {
+        if (((question.choice === undefined) || (question.choice.length === 0)) && question.type !== 5) {
+            return;
+        }
+        else if (question.type !== 5) {
             choice = question.choice;
 
-        } else {
+        }else {
             let t = question.question[num].type;
             if (t === 1 || t === 2 || t === 3 || t === 7) {
                 choice = question.question[num].choice;

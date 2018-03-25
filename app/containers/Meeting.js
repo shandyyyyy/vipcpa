@@ -43,7 +43,7 @@ export default class Meeting extends React.Component {
     }
 
     componentWillMount() {
-        gaodun_callback.GetData.getClass(60, (result) => {
+        gaodun_callback.GetData.getClass((result) => {
             let classID = result.id;
             let className = result.name;
             let groupID = result.groupID;
@@ -67,7 +67,6 @@ export default class Meeting extends React.Component {
 
     getDate = () => {
         //查询section
-        gaodun_callback.Config.type = 1;
         gaodun_callback.Group.queryTag(this.state.groupID, (resp) => {
                 // window.alert(JSON.stringify(resp));
                 if (resp.status === 0) {

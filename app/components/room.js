@@ -43,55 +43,29 @@ export default class Room extends React.Component {
         this.state = {
             message: '自习室',
             tabIndex: 0,
-            height: document.documentElement.clientHeight - 45 - 50 - 25,
-            left: 5,
-            data: [
-                {
-                    id: 1,
-                    finished: false,
-                    label: 'basketball basketballbasketballbasketballbasketball',
-                    brief: 'details',
-                    extra: false,
-                    thumb: '//zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png'
-                },
-                {
-                    id: 2,
-                    finished: false,
-                    label: 'football',
-                    brief: 'details',
-                    extra: true,
-                    thumb: '//zos.alipayobjects.com/rmsportal/dNuvNrtqUztHCwM.png'
-                },
-                {
-                    id: 3,
-                    finished: true,
-                    label: 'football',
-                    brief: 'details',
-                    extra: true,
-                    thumb: '//zos.alipayobjects.com/rmsportal/UmbJMbWOejVOpxe.png'
-                },
-            ]
+            height: document.documentElement.clientHeight - 45 -(gaodun_callback.Config.app?0:50),
+            left: '5%'
         };
     }
 
     componentWillMount() {
         let {location} = this.props;
         let tabIndex = 0;
-        let left = 5;
+        let left = '5%';
         if(location.pathname === '/index/room'){
             tabIndex =  0;
         }
         if(location.pathname === '/index/room/myIssue'){
             tabIndex =  1;
-            left = 30;
+            left = '30%';
         }
         if(location.pathname === '/index/room/report'){
             tabIndex =  2;
-            left = 55;
+            left = '55%';
         }
         if(location.pathname === '/room/interaction'){
             tabIndex =  3;
-            left = 80;
+            left = '80%';
         }
         this.setState({
             tabIndex: tabIndex,
@@ -101,29 +75,29 @@ export default class Room extends React.Component {
 
     componentDidMount() {
         this.setState({
-            height: document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).offsetTop - 50 -45
+            height: document.documentElement.clientHeight - ReactDOM.findDOMNode(this.lv).offsetTop-45-(gaodun_callback.Config.app?0:50)
         })
     }
 
     tabClick = (index) => {
         let {location} = this.props;
         let name='';
-        let left = 5;
+        let left = '5%';
         switch (index){
             case 0:
-                left = 5;
+                left = '5%';
                 break;
             case 1:
                 name="myIssue";
-                left = 30;
+                left = '30%';
                 break;
             case 2:
                 name="report";
-                left = 55;
+                left = '55%';
                 break;
             case 3:
                 name = "interaction";
-                left = 80;
+                left = '80%';
                 break;
             default:
                 break;
@@ -174,7 +148,7 @@ export default class Room extends React.Component {
                       ref={el => this.lv = el}
                       initialPage = {this.state.tabIndex}
                       tabBarActiveTextColor="#008489"
-                      tabBarUnderlineStyle={{borderColor:'#008489',left:this.state.left+'%'}}
+                      tabBarUnderlineStyle={{borderColor:'#008489',left:this.state.left}}
                       onChange={(tab,index) => {
                           this.tabClick(index);
                       }}
